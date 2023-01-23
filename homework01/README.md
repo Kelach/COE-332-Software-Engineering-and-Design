@@ -1,5 +1,5 @@
 ## Description
-Consists of 3 python scripts corresponding to exercises at the end of the Python Refresher guide. (uses the Names python module)
+Consists of 3 python scripts corresponding to exercises at the end of the Python Refresher guide. (uses the Names python module) and "words.txt" text file
 
 ## Navigation
 
