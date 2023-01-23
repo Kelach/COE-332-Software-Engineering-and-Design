@@ -1,7 +1,7 @@
 ## Description
 Consists of 3 python scripts corresponding to exercises at the end of the Python Refresher guide. (uses the Names python module) and "words.txt" text file
 
-## Navigation
+## Solutions
 
 ### Exercise 1 Description:
 *Write a Python script to find and print the five longest words in the words file from earlier in this guide. Ties go to the words that would appear first alphabetically.*
