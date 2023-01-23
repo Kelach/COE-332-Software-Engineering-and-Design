@@ -1,11 +1,10 @@
-from names import get_full_name, get_first_name
-
 def ex1():
     words = []
     longest_word = ""
     
-    with open("words.txt", "r") as filein:
-        words = filein.read().splitlines()
+    with open("/usr/share/dict/words", "r") as filein:
+        content = filein.readlines()
+        words = [line.strip() for line in content]        
 
     words.sort(key=len, reverse=True)
     print(words[:5])
