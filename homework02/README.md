@@ -6,7 +6,7 @@ Simulates a land rover excavation on mars with an informative output
 
 ### [generate_sites.py](./generate_sites.py):
   
-  Generates 5 random meteorite landing sites using "random" python library. Sites are serialized as json objects into a json file titled [ml_sites](./ml_sites). The geolocation of the randomly generated sites were set based on the assignment requirements
+  Generates 5 random meteorite landing sites using "random" python library. Sites are serialized as json objects into a json file titled [ml_sites](./ml_sites). The geolocation of the randomly generated sites were bounded by a ranged per one of the requirements of this assignment
 
 ### [calculate_trip.py](./calculate_trip):
   
