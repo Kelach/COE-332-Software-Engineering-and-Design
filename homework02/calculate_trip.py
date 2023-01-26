@@ -59,7 +59,7 @@ def excavate(planet_radius:float, start_pos:dict, end_pos:dict, speed:float, sam
 
 
 def main():
-    with open("./homework02/ml_sites.json", "r") as f:
+    with open("./ml_sites.json", "r") as f:
         data = json.load(f)
         sites = data["sites"]
         distance_travelled = 0
@@ -85,7 +85,7 @@ def main():
             
             print(f'Found {site["composition"]} material at site {site["site_id"]}!' + 
                      f" | Time taken: {duration:.2f} hrs" + 
-                     f" | Distance travelled: {distance:.2f} km\n")
+                     f" | Distance travelled: {distance:.2f} km")
             distance_travelled += distance
             time_elapsed += duration
         print(50*"=", f"\n\nExpedition Complete | {distance_travelled:.2f} km travelled in {time_elapsed:.2f} hrs")

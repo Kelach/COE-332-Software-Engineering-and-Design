@@ -1,7 +1,7 @@
 # #!/usr/bin/env python3
 import random
 import json
-def generate_ml(id, lat_range:list[int], long_range:list[int], compositions:list[str], prec:int = 1) -> dict:
+def generate_ml(id, lat_range:list, long_range:list, compositions:list, prec:int = 1) -> dict:
     '''
     Description
     -------
@@ -40,7 +40,7 @@ def main():
     sites = [generate_ml(i+1, [16, 18], [82, 84], ["stony", "iron", "stony-iron"], 13) for i in range(5)]
     data = {"sites": sites}
     # exporting
-    with open("./homework02/ml_sites.json", "x") as fout:
+    with open("./ml_sites.json", "w") as fout:
         json.dump(data, fout, indent=2)
     
 if __name__ == "__main__":
