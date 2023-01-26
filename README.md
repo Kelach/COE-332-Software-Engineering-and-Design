@@ -1,7 +1,9 @@
 # coe-332-sp23
-Completed coursework for COE 332 Software Engineering and Desgin
+  Completed coursework for COE 332 Software Engineering and Desgin. Assignments were completed on a remote machine in linux virtual environment. The remote machines were provided by TACC (Texas Advanced Computer Center).
 
-| Uni            | Topics Covered   |     Scripts     |
+# Table of Contents:
+
+| Unit            | Topics Covered   |     Scripts     |
 |------------------|------------------|-----------------|
 | **1. Onboarding and Essential Skills** | Git, Linux, Lists, Dictionaries | [Git w/Remote Linux Machine](./homework01) (Setup)
 | **2. Parsing Common Data Formats**    | JSON, YAML, XML, CSV | [Meteorite Landings Simulation](./homework02/) |
