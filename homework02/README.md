@@ -15,9 +15,9 @@ Simulates a land rover excavation on mars with an informative output
 
 ## Try it Yourself!
 
-Step 1: Clone this github repository with this command: `git clone https://github.com/Kelach/coe-332-sp23/tree/main/homework02`
+Step 1: Clone this github repository with this command: `git clone https://github.com/Kelach/coe-332-sp23.git`
 
-Step 2: CD into the homework02 directory 
+Step 2: CD into the `homework02` directory 
 
 Step 3: run `python3 generate_sites.py`
      - Note: a new ml_sites.json will be created inside your cloned repo
