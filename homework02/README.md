@@ -15,21 +15,15 @@ Simulates a land rover excavation on mars with an informative output
 
 ## Try it Yourself!
 
-1.  Clone this repo
-2.  Run generate_sites.py (assuming you know how to run a python file, if you don't see [this](https://www.knowledgehut.com/blog/programming/run-python-scripts)
-    - Note: a new ml_sites.json will be created inside your cloned repo
-
-3.  Run calculate_trip.py and view the status of your expedition!
-    - Note: Both functions do not accept input from user.
-
-## Instructions
 Step 1: Clone this github repository with this command: `git clone https://github.com/Kelach/coe-332-sp23/tree/main/homework02`
 
 Step 2: CD into the homework02 directory 
 
 Step 3: run `python3 generate_sites.py`
+     - Note: a new ml_sites.json will be created inside your cloned repo
 
-Step 4: run simulation using `python3 calculate_trip.py` 
+Step 4: run simulation using `python3 calculate_trip.py`
+    - Note: Both functions do not accept input from user.
 
 ## Example Output: 
 ```
