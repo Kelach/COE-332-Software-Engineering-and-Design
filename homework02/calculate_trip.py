@@ -87,7 +87,7 @@ def main():
                      f" | Time taken: {duration:.2f} hrs" + 
                      f" | Distance travelled: {distance:.2f} km")
             distance_travelled += distance
-            time_elapsed += duration
+            time_elapsed += duration + sample_time
         print(50*"=", f"\n\nExpedition Complete | {distance_travelled:.2f} km travelled in {time_elapsed:.2f} hrs")
 
 
