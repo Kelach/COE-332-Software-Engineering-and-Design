@@ -20,7 +20,8 @@ Step 1: Clone this github repository with this command: `git clone https://githu
 Step 2: CD into the `homework02` directory 
 
 Step 3: run `python3 generate_sites.py`
-     - Note: a new ml_sites.json will be created inside your cloned repo
+
+   - Note: a new ml_sites.json will be created inside your cloned repo
 
 Step 4: run simulation using `python3 calculate_trip.py`
     - Note: Both functions do not accept input from user.
