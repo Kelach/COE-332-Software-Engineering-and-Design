@@ -10,7 +10,7 @@ Simulates a land rover excavation on mars with an informative output
 
 ### [calculate_trip.py](./calculate_trip):
   
-  Conducts a single robot expedition through ever meteorite landing site on [ml_sites](./ml_sites.json) with informative ouputs (such as total distance travelled).
+  Conducts a single robot expedition through ever meteorite landing site on `ml_sites` with informative ouputs (such as total distance travelled).
 
 
 ## Try it Yourself!
