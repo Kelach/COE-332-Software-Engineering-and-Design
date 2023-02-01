@@ -1,5 +1,5 @@
 # coe-332-sp23
-  Completed coursework for COE 332 Software Engineering and Desgin. Assignments were completed on a remote machine in linux virtual environment. The remote machines were provided by TACC (Texas Advanced Computer Center).
+  Completed coursework for COE 332 Software Engineering and Desgin. Assignments were completed on a remote machine in a linux virtual environment. The remote machines were provided by TACC (Texas Advanced Computer Center).
 
 # Table of Contents:
 
