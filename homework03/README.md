@@ -1,4 +1,4 @@
-# Mars Turbiditiy Analyses
+# Mars Turbidity Analyses (Simulation)
 
 This project is designed to assess the quality of water in the Mars laboratory where the meteorite samples are analyzed. By checking the latest water quality data, the program will determine if it is safe to proceed with the analysis or if a boil water notice should be issued.
 
