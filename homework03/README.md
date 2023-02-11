@@ -21,8 +21,8 @@ The data set used for this project can be accessed at the following link: https:
   - [analyze_water.py](./analyze_water.py): This script reads in the water quality data set "collected by the robot" and prints three key pieces of information to the screen:
           
       1. The current water turbidity (taken as the average of the most recent five data points).
-      2. Whether that [turbidity](## "Turbidity is the measure of relative clarity of a liquid") is below a safe threshold
-      3. The minimum time required for [turbidity](## "Turbidity is the measure of relative clarity of a liquid") to fall below the safe threshold.
+      2. Whether that [`turbidity`](## "Turbidity is the measure of relative clarity of a liquid") is below a safe threshold
+      3. The minimum time required for [`turbidity`](## "Turbidity is the measure of relative clarity of a liquid") to fall below the safe threshold.
 
   - [test_analyze_water.py](./test_analyze_water.py): This script contains unit tests for each function in analyze_water.py. Namely, the `calc_turbidity()`, `turbidity_waitime`, and `avg_turbidity`. The tester script checks the calculations made by each function using assert keywords after calling each function with a simple and hard-coded parameters.
 
