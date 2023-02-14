@@ -1,5 +1,7 @@
 import requests
 import logging
+from typing import List
+
 def calc_turbidity(a0:float, I90:float) -> float:
     '''
     Description
@@ -45,7 +47,7 @@ def turbidity_waitime(T0:float,T_thres:float, decay_fact:float) -> float:
     
     return seconds/360
 
-def avg_turbidity(data:list[dict], calib:str, detect_cur:str) -> float:
+def avg_turbidity(data:List[dict], calib:str, detect_cur:str) -> float:
     '''
     Description
     ----
