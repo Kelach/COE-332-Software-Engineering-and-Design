@@ -62,12 +62,20 @@ def get_data():
 @app.route("/epochs", methods=["GET"])
 def get_epochs():
     data = get_data()
-    return [ISS["epoch"] for ISS in data]
+    # Optional Query parameter "limit" to limit the # of results 
+    # return
+    try:
+        limit = int(request.args.get('limit', 2**31 - 1))
+    except ValueError:
+        return "ERROR: limit must be an intger"
+    
+    return [ISS["epoch"] for ISS in data][:limit]
 
 @app.route("/epochs/<epoch>", methods=["GET"])
 def get_state_vectors(epoch):
     data = get_data()
-    return data.get(epoch, "NA")
+    # iterate through list and only keep objects with desired epoch value
+    return [ISS for ISS in data if ISS.get(epoch, None) != None]
 
 @app.route("/epochs/<epoch>/speed", methods=["GET"])
 def get_speed(epoch):
