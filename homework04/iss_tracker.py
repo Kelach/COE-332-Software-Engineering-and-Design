@@ -27,7 +27,7 @@ def txt_to_dict(txt: str, keys: List[str], splitlines: str, splitline: str, star
     List of dictionaries
     '''
     data = []
-    parse = True if start == "" else False
+    parse = start == ""
     # for each line, create dictionary object and append
     # to data list.
     for line in txt.split(splitlines):
