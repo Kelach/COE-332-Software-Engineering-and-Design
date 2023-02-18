@@ -1,63 +1,176 @@
-# Mars Turbidity Analyses (Simulation)
+# International Space Station Data Flask App
 
-This project is designed to assess the quality of water in the Mars laboratory where the meteorite samples are analyzed. By checking the latest water quality data, the program will determine if it is safe to proceed with the analysis or if a boil water notice should be issued.
+## Project Objective
 
-## Getting Started
+This Flask application allows the user to query [International Space Station](https://en.wikipedia.org/wiki/International_Space_Station) (ISS) positional and velocity data. The data set contains an abundance of interesting positional and velocity data for the ISS, and it can be challenging to sift through the data manually to find what you are looking for. With this application, you can easily query the ISS data set and receive interesting information.
+
+## Data Set
+
+- ### Access
+  The ISS positional and velocity data set can be accessed from [ISS Trajectory Data Webiste (https://spotthestation.nasa.gov/trajectory_data.cfm). 
+
+- ### Description
+  The data set includes a header with additional information about the ISS like its mass (kg) and drag coefficient (m^2). 
+  
+  After the header, ISS state vectors, in the **Mean of J2000 (J2K) reference frame** are listed at four-minute intervals spanning a total length of 15 days. In case you're wondering, ISS state vectors in the Mean of J2000 (J2K) reference frame basically means positional and velocity values calculated for the ISS are relative to the Earth's equator and equinox.  
+  
+  Each state vector includes a time (epoch in Coordinated Universal Time), position vectors X, Y, and Z (km), and velcoty vectors X, Y, and Z (km/s).
+
+
+## Script
+- ### *[iss_tracker.py](./iss_tracker.py)*
+  - Flask Application that parses and returns to the end user information about the ISS such as its position as velocity. This flask application relies on the text file format version provided by [ISS Trajectory Data Webiste (https://spotthestation.nasa.gov/trajectory_data.cfm). 
+  - To view the currently support routes, see the [Running the App](#running-the-app) section
+  
+## Getting Started 
 These instructions will help you get a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
-Make sure you have Python3 (this project was built with Python 3.8) and pytest installed on your machine. You can install pytest by running the following command:
+Make sure you have Python3 (this project was built with Python 3.8) and flask installed on your machine. You can install flask by running the following command:
 
 ```
-pip install pytest
+pip install flask
 ```
 
-### Accessing the Data Set
+## Running the App
+To run the app, you will need to follow these steps:
 
-The data set used for this project can be accessed at the following link: https://raw.githubusercontent.com/wjallen/turbidity/main/turbidity_data.json.
+  1. Clone this repository to your local machine.
+  2. In your command terminal cd into this repository by running: `cd /path/to/coe-322-sp23/homework04`. Where you replace "/path/to/coe-322-sp23/homework04" with the path to this directory. 
+  3. Start the Flask server by running: 
+    `flask --app iss_tracker`.   
+    
+      - If you'd like to run this application in debug mode you can run this command to start the flask app instead:
+      `flask --app iss_tracker --debug run`
+  
+  4. Lastly, Navigate to http://localhost:5000/ in your web browser to access the application and you're all set!
+### Routes
+  Here are the currently supported routes and query parameters:
+  | Route | Returned Data
+  |-------|------------------|
+  | `/` | The entire data set (list of dictionaries)  <br><em> - Includes optional parameter "limit" (int) to truncate results </em></br> See [examples](#example-queries-and-results) below |
+  | `/epochs` | All Epochs in the data set (list of strings) <br><em> - Includes optional parameter "limit" (int) to truncate results </em></br> See [examples](#example-queries-and-results) below |
+  | `/epochs/<epoch>` | State vectors for a specific Epoch from the data set (list of one dictionary) <br> <b> < epoch > </b> Takes string inputs only.</br> See [examples](#example-queries-and-results) below |
+  | `/epochs/<epoch>/speed`| Instantaneous speed for a specific Epoch in the data set (string) |
+  
+  
+## Example Queries and Results
+  - Note: you may need to add quotes ("") surrounding your epoch queries if you are using a terminal to make requests. 
+    - e.g. `http://localhost:5000/epochs/"2023-02-15T12:16:00.000"`
+    instead of: `http://localhost:5000/epochs/2023-02-15T12:16:00.000`
 
-### Scripts
+<table>
+<tr>
+<td> 
 
-  - [analyze_water.py](./analyze_water.py): This script reads in the water quality data set "collected by the robot" and prints three key pieces of information to the screen:
-          
-      1. The current water turbidity (taken as the average of the most recent five data points).
-      2. Whether that [`turbidity`](## "Turbidity is the measure of relative clarity of a liquid") is below a safe threshold
-      3. The minimum time required for [`turbidity`](## "Turbidity is the measure of relative clarity of a liquid") to fall below the safe threshold.
+### Route 
 
-  - [test_analyze_water.py](./test_analyze_water.py): This script contains unit tests for each function in analyze_water.py. Namely, the `calc_turbidity()`, `turbidity_waitime`, and `avg_turbidity`. The tester script checks the calculations made by each function using assert keywords after calling each function with a simple and hard-coded parameters.
+</td>
+<td> 
 
-### Running the Code
-To run the water quality monitoring script, navigate to the directory where the analyze_water.py file is located and run the following command:
+### Returned Data
+
+</td>
+</tr>
+<tr>
+<td> 
+
+`http://localhost:5000?limit=3` 
+
+</td>
+<td>
+    
+```json
+[
+  {
+    "X": "-4788.368507507620",
+    "X_Dot": "-4.47317640532645",
+    "Y": "1403.549622371260",
+    "Y_Dot": "-5.44388258946684",
+    "Z": "-4613.109479300690",
+    "Z_Dot": "2.99705738521092",
+    "epoch": "2023-02-15T12:00:00.000"
+  },
+  {
+    "X": "-5675.021705065900",
+    "X_Dot": "-2.87004030254429",
+    "Y": "61.910987386751",
+    "Y_Dot": "-5.66832649751615",
+    "Z": "-3734.576449237840",
+    "Z_Dot": "4.27967238757376",
+    "epoch": "2023-02-15T12:04:00.000"
+  },
+  {
+    "X": "-6148.993248504040",
+    "X_Dot": "-1.05503300582525",
+    "Y": "-1284.195507156520",
+    "Y_Dot": "-5.48063337615216",
+    "Z": "-2583.725124493340",
+    "Z_Dot": "5.25228914094105",
+    "epoch": "2023-02-15T12:08:00.000"
+  }
+]
 
 ```
-python analyze_water.py
-```
- **Example output:**
 
-```
-Average turbidity based on most recent five measurements = 0.6820
-INFO:root: Turbidity is below threshold for safe use
-Minimum time required to return below a safe threshold = 0.00 hours
-```
+</td>
+</tr>
+<tr>
+<td>
 
-To run the unit tests, navigate to the directory where the test_analyze_water.py file is located and run the following command:
+`http://localhost:5000/epochs?limit=5` 
 
-```
-pytest test_analyze_water.py
-```
-
-**Example output:**
-```
-========================================== test session starts ===========================================
-platform win32 -- Python 3.8, pytest-7.2.1, pluggy-1.0.0
-rootdir: C:\path\to\script\directory
-collected 3 items
-
-test_analyze_water.py ...                                                                           [100%] 
-
-=========================================== 3 passed in 0.14s ============================================
+</td>
+<td>
+    
+```json
+[
+  "2023-02-15T12:00:00.000",
+  "2023-02-15T12:04:00.000",
+  "2023-02-15T12:08:00.000",
+  "2023-02-15T12:12:00.000",
+  "2023-02-15T12:16:00.000"
+]
 ```
 
-## Built With
-  - Python3 - The programming language used
-  - Pytest - The testing framework used
+</td>
+</tr>
+
+<tr>
+<td> 
+
+`http://localhost:5000/epochs/2023-02-15T12:16:00.000`
+
+</td>
+<td>
+
+```json
+[
+  {
+    "X": "-5750.560812798620",
+    "X_Dot": "2.67584228156696",
+    "Y": "-3604.169888126130",
+    "Y_Dot": "-3.94766617813937",
+    "Z": "186.445271666768",
+    "Z_Dot": "6.00579498886775",
+    "epoch": "2023-02-15T12:16:00.000"
+  }
+]
+
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+`http://localhost:5000/epochs/2023-02-15T12:16:00.000/speed`
+
+</td>
+<td>
+
+` 'speed: 7.669 km/s' `
+
+</td>
+</tr>
+</table>
