@@ -73,21 +73,21 @@ def get_epochs():
 def get_state_vectors(epoch):
     data = get_data()
     # iterate through list and only keep objects with desired epoch value
-    return [ISS for ISS in data if ISS.get(epoch, None) != None]
+    return [ISS for ISS in data if ISS.get("epoch") == epoch]
 
 @app.route("/epochs/<epoch>/speed", methods=["GET"])
 def get_speed(epoch):
     state_vectors = get_state_vectors(epoch)
     # check to make sure epoch is in data before proceeding
     if len(state_vectors) == 0:
-        return "ERROR: Request made for an epoch that does not exists"
+        return "ERROR: Request made for an epoch that does not exists\n"
     
-    velocity_vectors = [state_vectors["X_DOT"], state_vectors["Y_DOT"], state_vectors["Z_DOT"]]
+    velocity_vectors = [state_vectors[0]["X_Dot"], state_vectors[0]["Y_Dot"], state_vectors[0]["Z_Dot"]]
     try:
         # takes the sum of each velocity vector squared. Then returns root of that sum.
         speed_squared = sum([float(vector)*float(vector) for vector in velocity_vectors])
         speed = math.sqrt(speed_squared)
-        return str(speed)
+        return f"speed: {speed:.3f} km/s\n"
     except ValueError:
         return "Error converting speed to float"
 
