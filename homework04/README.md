@@ -1,4 +1,4 @@
-# International Space Station Data Flask App
+# International Space Station Flask App
 
 ## Project Objective
 
