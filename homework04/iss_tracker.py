@@ -59,7 +59,7 @@ def get_data():
     unparsed_data = requests.get(DATA_URL).text 
     return txt_to_dict(unparsed_data, keys, "\r\n", " ", "COMMENT End sequence of events")[:limit]
 
-@app.route("/epochs?limit=", methods=["GET"])
+@app.route("/epochs", methods=["GET"])
 def get_epochs():
     data = get_data()
     return [ISS["epoch"] for ISS in data]
@@ -76,15 +76,14 @@ def get_speed(epoch):
     if epoch not in data: 
         return "ERROR: Request made for an epoch that does not exists"
     state_vector = data.get(epoch)
+    velocity_vectors = [state_vector["X_DOT"], state_vector["Y_DOT"], state_vector["Z_DOT"]]
     try:
-        # Tries to sums up the square of values of that last three pairs
-        # (we assume the last three pairs are the velocity vectors)
-        speed_squared = sum([float(vector)*float(vector) for vector in state_vector.values()[-3:]])
+        # takes the sum of each velocity vector squared. Then returns root of that sum.
+        speed_squared = sum([float(vector)*float(vector) for vector in velocity_vectors])
         speed = math.sqrt(speed_squared)
         return str(speed)
     except ValueError:
-        print("Error converting speed to float")
-        return ""
+        return "Error converting speed to float"
 
 # the next statement should usually appear at the bottom of a flask app
 if __name__ == '__main__':
