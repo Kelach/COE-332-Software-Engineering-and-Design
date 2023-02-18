@@ -51,7 +51,7 @@ def get_data():
     # Optional Query parameter "limit" to limit the # of results 
     # return
     try:
-        limit = int(request.args.get('limit', float('inf')))
+        limit = int(request.args.get('limit', 2**31 - 1))
     except ValueError:
         return "ERROR: limit must be an intger"
     
