@@ -36,13 +36,11 @@ def txt_to_dict(txt: str, keys: List[str], splitlines: str, splitline: str, star
             try:
                 # serializes keys and values into a dictionary
                 # then appends to data list
-                # print(values)
                 data.append({keys[i]:values[i] for i in range(len(keys))}) 
             except IndexError as e:
                 print("Lengths of values and keys DO NOT MATCH!")
                 raise(e)
         if line.strip() == start.strip():
-            print(line.strip(), start.strip())
             parse = True
     return data
 
@@ -79,12 +77,12 @@ def get_state_vectors(epoch):
 
 @app.route("/epochs/<epoch>/speed", methods=["GET"])
 def get_speed(epoch):
-    data = get_data()
+    state_vectors = get_state_vectors(epoch)
     # check to make sure epoch is in data before proceeding
-    if epoch not in data: 
+    if len(state_vectors) == 0:
         return "ERROR: Request made for an epoch that does not exists"
-    state_vector = data.get(epoch)
-    velocity_vectors = [state_vector["X_DOT"], state_vector["Y_DOT"], state_vector["Z_DOT"]]
+    
+    velocity_vectors = [state_vectors["X_DOT"], state_vectors["Y_DOT"], state_vectors["Z_DOT"]]
     try:
         # takes the sum of each velocity vector squared. Then returns root of that sum.
         speed_squared = sum([float(vector)*float(vector) for vector in velocity_vectors])
