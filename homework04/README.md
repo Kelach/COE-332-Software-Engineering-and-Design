@@ -7,19 +7,19 @@ This Flask application allows the user to query [International Space Station](ht
 ## Data Set
 
 - ### Access
-  The ISS positional and velocity data set can be accessed from [ISS Trajectory Data Webiste (https://spotthestation.nasa.gov/trajectory_data.cfm). 
+  The ISS positional and velocity data set can be accessed from the [ISS Trajectory Data Webiste](https://spotthestation.nasa.gov/trajectory_data.cfm). 
 
 - ### Description
   The data set includes a header with additional information about the ISS like its mass (kg) and drag coefficient (m^2). 
   
-  After the header, ISS state vectors, in the **Mean of J2000 (J2K) reference frame** are listed at four-minute intervals spanning a total length of 15 days. In case you're wondering, ISS state vectors in the Mean of J2000 (J2K) reference frame basically means positional and velocity values calculated for the ISS are relative to the Earth's equator and equinox.  
+  After the header, ISS state vectors, in the **Mean of J2000 (J2K) reference frame** are listed at four-minute intervals spanning a total length of 15 days. In case you're wondering, ISS state vectors in the Mean of J2000 (J2K) reference frame basically means the positional and velocity values calculated for the ISS are relative to the Earth's equator and equinox.  
   
-  Each state vector includes a time (epoch in Coordinated Universal Time), position vectors X, Y, and Z (km), and velcoty vectors X, Y, and Z (km/s).
+  Each state vector includes a time (epoch in Coordinated Universal Time), position vectors X, Y, and Z (km), and velocity vectors X, Y, and Z (km/s).
 
 
 ## Script
 - ### *[iss_tracker.py](./iss_tracker.py)*
-  - Flask Application that parses and returns to the end user information about the ISS such as its position as velocity. This flask application relies on the text file format version provided by [ISS Trajectory Data Webiste (https://spotthestation.nasa.gov/trajectory_data.cfm). 
+  - Flask Application that parses and returns to the end user information about the ISS such as its position as velocity. This flask application relies on the text file format version provided by the [ISS Trajectory Data Webiste](https://spotthestation.nasa.gov/trajectory_data.cfm). 
   - To view the currently support routes, see the [Running the App](#running-the-app) section
   
 ## Getting Started 
