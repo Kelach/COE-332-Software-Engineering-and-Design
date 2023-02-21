@@ -64,8 +64,10 @@ def get_data() -> List[dict]:
     # return
     try:
         limit = int(request.args.get('limit', 2**31 - 1))
+        if limit < 0: raise(ValueError) # catches negatives parameter inputs
+
     except ValueError:
-        return ("ERROR: limit must be an intger", 404)
+        return ("ERROR: limit must be a positive intger", 404)
     
     keys = ["epoch", "X", "Y", "Z", "X_Dot", "Y_Dot", "Z_Dot"]
     unparsed_data = requests.get(DATA_URL).text 
@@ -92,8 +94,9 @@ def get_epochs() -> List[str]:
     # return
     try:
         limit = int(request.args.get('limit', 2**31 - 1))
+        if limit < 0: raise(ValueError) # catches negatives parameter inputs
     except ValueError:
-        return ("ERROR: limit must be an intger", 404)
+        return ("ERROR: limit must be a positve intger", 404)
     
     return [ISS["epoch"] for ISS in data][:limit]
 
