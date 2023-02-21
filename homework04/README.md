@@ -48,8 +48,8 @@ To run the app, you will need to follow these steps:
   Here are the currently supported routes and query parameters:
   | Route | Returned Data
   |-------|------------------|
-  | `/` | The entire data set (list of dictionaries)  <br><em> - Includes optional parameter "limit" (int) to truncate results </em></br> See [examples](#example-queries-and-results) below |
-  | `/epochs` | All Epochs in the data set (list of strings) <br><em> - Includes optional parameter "limit" (int) to truncate results </em></br> See [examples](#example-queries-and-results) below |
+  | `/` | The entire data set (list of dictionaries)  <br><em> - Includes optional parameter "limit" (positive int) to truncate results </em></br> See [examples](#example-queries-and-results) below |
+  | `/epochs` | All Epochs in the data set (list of strings) <br><em> - Includes optional parameter "limit" (positive int) to truncate results </em></br> See [examples](#example-queries-and-results) below |
   | `/epochs/<epoch>` | State vectors for a specific Epoch from the data set (list of one dictionary) <br> <b> < epoch > </b> Takes string inputs only.</br> See [examples](#example-queries-and-results) below |
   | `/epochs/<epoch>/speed`| Instantaneous speed for a specific Epoch in the data set (string) |
   
