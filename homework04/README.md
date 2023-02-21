@@ -20,7 +20,7 @@ This Flask application allows the user to query [International Space Station](ht
 ## Script
 - ### *[iss_tracker.py](./iss_tracker.py)*
   - Flask Application that parses and returns to the end user information about the ISS such as its position as velocity. This flask application relies on the text file format version provided by the [ISS Trajectory Data Webiste](https://spotthestation.nasa.gov/trajectory_data.cfm). 
-  - To view the currently support routes, see the [Running the App](#running-the-app) section
+  - To view the currently supported routes, see the [Running the App](#running-the-app) section
   
 ## Getting Started 
 These instructions will help you get a copy of the project up and running on your local machine for development and testing purposes.
