@@ -1,8 +1,8 @@
-# International Space Station Flask Application
+# International Space Station Flask Application Part 2!
 
 ## Project Objective
 
-This Flask application allows the user to query [International Space Station](https://en.wikipedia.org/wiki/International_Space_Station) (ISS) positional and velocity data. The data set contains an abundance of interesting positional and velocity data for the ISS, and it can be challenging to sift through the data manually to find what you are looking for. With this application, you can easily query the ISS data set and receive interesting information.
+This new and improved Flask application now allows the user to query **and modify** [International Space Station](https://en.wikipedia.org/wiki/International_Space_Station) (ISS) positional and velocity data. As previously, the data set contains an abundance of interesting positional and velocity data for the ISS, and it can be challenging to sift through the data manually to find what you are looking for. With this application, you can easily query the ISS data set and receive interesting information.
 
 ## Data Set
 
@@ -26,32 +26,52 @@ This Flask application allows the user to query [International Space Station](ht
 These instructions will help you get a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
-Make sure you have Python3 (this project was built with Python 3.8) and flask installed on your machine. You can install flask by running the following command:
+You can now run this application using Docker! To do so, make sure you have the latest version of Docker install on your Laptop/PC.
 
-```
-pip install flask
-```
-
-## Running the App
+### Running the App (Using Docker)
 To run the app, you will need to follow these steps:
 
-  1. Clone this repository to your local machine.
-  2. In your command terminal cd into this repository by running: `cd /path/to/coe-322-sp23/homework04`. Where you replace "/path/to/coe-322-sp23/homework04" with the path to this directory. 
-  3. Start the Flask server by running: 
-    `flask --app iss_tracker`.   
-    
-      - If you'd like to run this application in debug mode you can run this command to start the flask app instead:
-      `flask --app iss_tracker --debug run`
+  1. Clone this repository to your local machine by the following in your command terminal:
+      
+          git clone https://github.com/Kelach/coe-332-sp23.git
   
-  4. Lastly, Navigate to http://localhost:5000/ in your web browser to access the application and you're all set!
+  2. In your command terminal cd into this repository by running: 
+  
+          cd /path/to/coe-322-sp23/homework04
+  
+  Where you replace "/path/to/coe-322-sp23/homework04" with the path to this directory. 
+  
+  3. Pull the Docker image from the public registry by running the following command:
+      
+          docker pull kelach/iss_tracker:hw05
+  
+  4. Next, Build the Docker image you just pulled by running this command:
+  
+          docker build -t kelach/iss_tracker:hw05 .
+  
+  5. Now you can run the Docker image using running this command:
+      
+      **Note**: Running the command below will start the Flask application automatically
+      
+          docker run -it --rm -p 5000:5000 kelach/iss_tracker:hw05
+          
+        - Incase you're new to running Docker images:
+            - `-it` : Allows you to interact in your container inside your terminal
+            - `--rm` : removes the container after exiting the Flask application
+            - `-p` : Binds port 5000 on the container to the port 5000 on your local/remote computer (so you can communicate with the flask program!)
+      
+  4. Now that the Flask application is running you can navigate to http://localhost:5000/ in your web browser to access the data and you're all set!
+
 ### Routes
   Here are the currently supported routes and query parameters:
-  | Route | Returned Data
-  |-------|------------------|
-  | `/` | The entire data set (list of dictionaries)  <br><em> - Includes optional parameter "limit" (positive int) to truncate results </em></br> See [examples](#example-queries-and-results) below |
-  | `/epochs` | All Epochs in the data set (list of strings) <br><em> - Includes optional parameter "limit" (positive int) to truncate results </em></br> See [examples](#example-queries-and-results) below |
-  | `/epochs/<epoch>` | State vectors for a specific Epoch from the data set (list of one dictionary) <br> <b> < epoch > </b> Takes string inputs only.</br> See [examples](#example-queries-and-results) below |
-  | `/epochs/<epoch>/speed`| Instantaneous speed for a specific Epoch in the data set (string) |
+  | Route | Method | Returned Data
+  |-------|---------|---------|
+  | `/` | `GET` |The entire data set (list of dictionaries)  <br><em> - Includes optional parameters "limit" (positive int) to truncate results and "offset" (positive int) to change the starting position at which the data is returned </em></br> See [examples](#example-queries-and-results) below |
+  | `/epochs` | `GET` | All Epochs in the data set (list of strings) <br><em> - Includes optional parameters "limit" (positive int) to truncate results and "offset" (positive int) to change the starting position at which the data is returned</em></br> See [examples](#example-queries-and-results) below |
+  | `/epochs/<epoch>` | `GET` | State vectors for a specific Epoch from the data set (list of one dictionary) <br> <b> < epoch > </b> Takes string inputs only.</br> See [examples](#example-queries-and-results) below |
+  | `/help` | `GET` | Help text (string; not html friendly) that briefly describes each route |
+  | `/delete-data` | `DELETE` | Deletes all stored data in the application |
+  | `/post-data` | `POST` | Reloads flask application with data from the ISS Data Webstei |
   
   
 ## Example Queries and Results
@@ -170,6 +190,42 @@ To run the app, you will need to follow these steps:
 <td>
 
 ` 'speed: 7.669 km/s' `
+
+</td>
+</tr>
+<tr>
+<td>
+
+`http://localhost:5000/help`
+
+</td>
+<td>
+
+string text similar to the [Routes](#routes) table
+
+</td>
+</tr>
+<tr>
+<td>
+
+`http://localhost:5000/delete-data`
+
+</td>
+<td>
+
+` 'Data deleted!' `
+
+</td>
+</tr>
+<tr>
+<td>
+
+`http://localhost:5000/post-data`
+
+</td>
+<td>
+
+` 'Data Restored!' `
 
 </td>
 </tr>
