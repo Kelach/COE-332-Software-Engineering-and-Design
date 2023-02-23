@@ -170,7 +170,7 @@ def get_speed(epoch) -> str:
     except ValueError:
         return ("Error converting speed to float")
 
-app.route("/delete-data", methods=["DELETE"])
+@app.route("/delete-data", methods=["DELETE"])
 def delete_data():
     '''
     Description
@@ -204,7 +204,7 @@ def post_data():
     '''
     global data 
     data = load_data()
-    return "Data Restored!/n"
+    return "Data Restored!\n"
 
 def make_output_table_row(strings:List[str])->str:
     '''
