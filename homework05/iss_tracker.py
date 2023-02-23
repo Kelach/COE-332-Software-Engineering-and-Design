@@ -218,8 +218,7 @@ def make_output_table_row(strings:List[str])->str:
     --------
         String that contains a HTML row "element" of a "table" element tag
     '''
-    body = "".join([f"|\t{text}\t|" for text in strings])
-    return f"{body}"
+    return "".join([f"{text} - " for text in strings])
 
 @app.route("/help", methods=['GET'])
 def get_help():
@@ -238,7 +237,7 @@ def get_help():
     --------
          String text similar to the output of a command line tool
     '''
-    horizontal_line = "="*30
+    horizontal_line = "="*100
     return f'''ISS TRACKER API
 
 
@@ -246,12 +245,19 @@ def get_help():
 {horizontal_line}
 
 {make_output_table_row(['"/"', "GET", "Return entire data set"])}
+
 {make_output_table_row(['"/epochs"', "GET", "Return list of all Epochs in the data set"])}
+
 {make_output_table_row(['"/epochs?limit=int&offset=int"', "GET", "Return modified list of Epochs given query parameters"])}
-{make_output_table_row(['"/epochs/&lt;epoch&gt;"', "GET", "Return state vectors for a specific Epoch from the data set"])}
-{make_output_table_row(['"/epochs/&lt;epoch&gt;/speed"', "GET", "Returns instantaneous speed for a specific Epoch in the data set"])}
+
+{make_output_table_row(['"/epochs/<epoch>"', "GET", "Return state vectors for a specific Epoch from the data set"])}
+
+{make_output_table_row(['"/epochs/<epoch>;/speed"', "GET", "Returns instantaneous speed for a specific Epoch in the data set"])}
+
 {make_output_table_row(['"/help"', "GET", "Returns help text (this right here!)"])}
+
 {make_output_table_row(['"/delete-data"', "DELETE", "Deletes all data from the API's memory"])}
+
 {make_output_table_row(['"/post-data"', "POST", "Reloads all the data from the Internalnationa Space Station Data website"])}
 '''
 # global varible "data". Flask application always starts with
