@@ -185,7 +185,7 @@ def delete_data():
     '''
     global data
     data.clear()
-    return "<h1>Data <span style='color:red;'>Deleted!</span></h1>"
+    return "Data deleted!\n"
 
 @app.route("/post-data", methods=["POST"])
 def post_data():
@@ -204,7 +204,9 @@ def post_data():
     '''
     global data 
     data = load_data()
-def make_html_table_row(strings:List[str])->str:
+    return "Data Restored!/n"
+
+def make_output_table_row(strings:List[str])->str:
     '''
     Description
     -------
@@ -216,8 +218,8 @@ def make_html_table_row(strings:List[str])->str:
     --------
         String that contains a HTML row "element" of a "table" element tag
     '''
-    body = "".join([f"<td>{text}</td>" for text in strings])
-    return f"<tr> {body} </tr>"
+    body = "".join([f"|\t{text}\t|" for text in strings])
+    return f"{body}"
 
 @app.route("/help", methods=['GET'])
 def get_help():
@@ -236,24 +238,21 @@ def get_help():
     --------
          String text similar to the output of a command line tool
     '''
-    return f'''<h1>ISS TRACKER API </h1>
-<table style="padding:5px;">
-<tr>
-<td> <h3>ROUTES</h3> </td>
-<td> <h3>METHOD</h3> </td>
-<td> <h3>DESCRIPTION</h3> </td>
-</tr>
+    horizontal_line = "="*30
+    return f'''ISS TRACKER API
 
-{make_html_table_row(['"/"', "GET", "Return entire data set"])}
-{make_html_table_row(['"/epochs"', "GET", "Return list of all Epochs in the data set"])}
-{make_html_table_row(['"/epochs?limit=int&offset=int"', "GET", "Return modified list of Epochs given query parameters"])}
-{make_html_table_row(['"/epochs/&lt;epoch&gt;"', "GET", "Return state vectors for a specific Epoch from the data set"])}
-{make_html_table_row(['"/epochs/&lt;epoch&gt;/speed"', "GET", "Returns instantaneous speed for a specific Epoch in the data set"])}
-{make_html_table_row(['"/help"', "GET", "Returns help text (this right here!)"])}
-{make_html_table_row(['"/delete-data"', "DELETE", "Deletes all data from the API's memory"])}
-{make_html_table_row(['"/post-data"', "POST", "Reloads all the data from the Internalnationa Space Station Data website"])}
 
-</table>
+{make_output_table_row(["ROUTES", "METHOD", "DESCRIPTION"])}
+{horizontal_line}
+
+{make_output_table_row(['"/"', "GET", "Return entire data set"])}
+{make_output_table_row(['"/epochs"', "GET", "Return list of all Epochs in the data set"])}
+{make_output_table_row(['"/epochs?limit=int&offset=int"', "GET", "Return modified list of Epochs given query parameters"])}
+{make_output_table_row(['"/epochs/&lt;epoch&gt;"', "GET", "Return state vectors for a specific Epoch from the data set"])}
+{make_output_table_row(['"/epochs/&lt;epoch&gt;/speed"', "GET", "Returns instantaneous speed for a specific Epoch in the data set"])}
+{make_output_table_row(['"/help"', "GET", "Returns help text (this right here!)"])}
+{make_output_table_row(['"/delete-data"', "DELETE", "Deletes all data from the API's memory"])}
+{make_output_table_row(['"/post-data"', "POST", "Reloads all the data from the Internalnationa Space Station Data website"])}
 '''
 # global varible "data". Flask application always starts with
 # all data.
