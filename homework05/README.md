@@ -37,30 +37,30 @@ To run the app, you will need to follow these steps:
   
   2. In your command terminal cd into this repository by running: 
   
-          cd /path/to/coe-322-sp23/homework04
+          cd /path/to/coe-322-sp23/homework05
   
-  Where you replace "/path/to/coe-322-sp23/homework04" with the path to this directory. 
+  Where you replace "/path/to/coe-322-sp23/homework05" with the path to this directory. 
   
   3. Pull the Docker image from the public registry by running the following command:
       
           docker pull kelach/iss_tracker:hw05
   
   4. Next, Build the Docker image you just pulled by running this command:
-  
+    
+    **Note**: Running the command below will start the Flask application automatically
+    
           docker build -t kelach/iss_tracker:hw05 .
   
-  5. Now you can run the Docker image using running this command:
-      
-      **Note**: Running the command below will start the Flask application automatically
+  5. The flask application should automatically run after building the Dokcer image, but if you ever wish to run the image without having to re-build it you can run the following command:
       
           docker run -it --rm -p 5000:5000 kelach/iss_tracker:hw05
           
         - Incase you're new to running Docker images:
-            - `-it` : Allows you to interact in your container inside your terminal
+            - `-it` : Allows you to interact in your container using your terminal
             - `--rm` : removes the container after exiting the Flask application
             - `-p` : Binds port 5000 on the container to the port 5000 on your local/remote computer (so you can communicate with the flask program!)
       
-  4. Now that the Flask application is running you can navigate to http://localhost:5000/ in your web browser to access the data and you're all set!
+  6. Now that the Flask application is running you can navigate to http://localhost:5000/ in your web browser to access the data and you're all set!
 
 ### Routes
   Here are the currently supported routes and query parameters:
