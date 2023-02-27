@@ -113,16 +113,8 @@ def get_epochs() -> List[str]:
     
     # Try block searches for optional query parameters
     # "limit" and "offset". Handles negative or non-integer input edge cases 
-    try:
-        limit = int(request.args.get('limit', 2**31 - 1))
-        if limit < 0: raise(ValueError) # catches negatives parameter inputs
-
-        offset = int(request.args.get('offset', 0))
-        if offset < 0: raise(ValueError) # catches negatives parameter inputs
-    except ValueError:
-        return ("ERROR: limit and offset must be a positive intgers", 404)
     
-    return [ISS["epoch"] for ISS in data][offset:offset+limit]
+    return [ISS["epoch"] for ISS in data]
 
 @app.route("/epochs/<epoch>", methods=["GET"])
 def get_state_vectors(epoch) -> List[dict]:
@@ -168,7 +160,7 @@ def get_speed(epoch) -> str:
         speed = math.sqrt(speed_squared)
         return f"speed: {speed:.3f} km/s\n"
     except ValueError:
-        return ("Error converting speed to float")
+        return ("Error converting speed to float", 404)
 
 @app.route("/delete-data", methods=["DELETE"])
 def delete_data():
