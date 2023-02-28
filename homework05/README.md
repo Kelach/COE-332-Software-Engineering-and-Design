@@ -55,12 +55,13 @@ To run the app, you will need to follow these steps:
           git clone https://github.com/Kelach/coe-332-sp23.git
   
  2. In your command terminal cd into this repository by running: 
-  
+      
           cd /path/to/coe-322-sp23/homework05
-  
-      - Where you replace "/path/to/coe-322-sp23/homework05" with the path to this directory.
+          
+    - Where you replace "/path/to/coe-322-sp23/homework05" with the path to this directory hw5.
       
  3. Next, build the Docker image you just pulled by running this command:
+    
     **Note**: Running the command below will start the Flask application automatically
     
         docker build -t kelach/iss_tracker:hw05 .
