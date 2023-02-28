@@ -20,7 +20,7 @@ This new and improved Flask application now allows the user to query **and modif
 ## Script
 - ### *[iss_tracker.py](./iss_tracker.py)*
   - Flask Application that parses and returns to the end user information about the ISS such as its position as velocity. This flask application relies on the text file format version provided by the [ISS Trajectory Data Webiste](https://spotthestation.nasa.gov/trajectory_data.cfm). 
-  - To view the currently supported routes, see the [Running the App](#running-the-app-using-docker) section
+  - To view the currently supported routes, see the [Running the App](#running-the-app-via-the-docker-hub) section
   
 ## Getting Started 
 These instructions will help you get a copy of the project up and running on your local machine for development and testing purposes.
@@ -28,24 +28,15 @@ These instructions will help you get a copy of the project up and running on you
 ### Prerequisites
 You can now run this application using Docker! To do so, make sure you have the latest version of Docker install on your Laptop/PC.
 
-### Running the App (Using Docker)
+
+### Running the App (via the Docker Hub)
 To run the app, you will need to follow these steps:
 
-  1. Clone this repository to your local machine by the following in your command terminal:
-      
-          git clone https://github.com/Kelach/coe-332-sp23.git
-  
-  2. In your command terminal cd into this repository by running: 
-  
-          cd /path/to/coe-322-sp23/homework05
-  
-  Where you replace "/path/to/coe-322-sp23/homework05" with the path to this directory. 
-  
-  3. Pull the Docker image from the public registry by running the following command:
+  1. Pull the Docker image from the public registry by running the following command:
       
           docker pull kelach/iss_tracker:hw05
   
-  5. Now, you can run a container of the image with the following command:
+  2. Now, you can run a container of the image with the following command:
       
           docker run -it --rm -p 5000:5000 kelach/iss_tracker:hw05
           
@@ -54,8 +45,28 @@ To run the app, you will need to follow these steps:
             - `--rm` : removes the container after exiting the Flask application
             - `-p` : Binds port 5000 on the container to the port 5000 on your local/remote computer (so you can communicate with the flask program!)
       
-  6. Now that the Flask application is running you can navigate to http://localhost:5000/ in your web browser to access the data and you're all set!
+  3. Now that the Flask application is running you can navigate to http://localhost:5000/ in your web browser to access the data and you're all set!
 
+### Running the App (via Dockerfile *Optional*)
+  Alternatively, if you'd like to build the docker image on your local computer instead of pulling the image from the Docker Hub, see the following steps:
+  
+ 1. Clone this repository to your local machine by the following in your command terminal:
+      
+          git clone https://github.com/Kelach/coe-332-sp23.git
+  
+ 2. In your command terminal cd into this repository by running: 
+  
+          cd /path/to/coe-322-sp23/homework05
+  
+      - Where you replace "/path/to/coe-322-sp23/homework05" with the path to this directory.
+      
+ 3. Next, build the Docker image you just pulled by running this command:
+    **Note**: Running the command below will start the Flask application automatically
+    
+        docker build -t kelach/iss_tracker:hw05 .
+  
+  4. Now that the Flask application is running you can navigate to http://localhost:5000/ in your web browser to access the data and you're all set!
+   
 ### Routes
   Here are the currently supported routes and query parameters:
   | Route | Method | Returned Data
