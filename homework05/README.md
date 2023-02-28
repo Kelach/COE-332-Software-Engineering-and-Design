@@ -45,13 +45,7 @@ To run the app, you will need to follow these steps:
       
           docker pull kelach/iss_tracker:hw05
   
-  4. Next, Build the Docker image you just pulled by running this command:
-    
-      - **Note**: Running the command below will start the Flask application automatically
-    
-            docker build -t kelach/iss_tracker:hw05 .
-  
-  5. The flask application should automatically run after building the Dokcer image, but if you ever wish to run the image without having to re-build it you can run the following command:
+  5. Now, you can run a container of the image with the following command:
       
           docker run -it --rm -p 5000:5000 kelach/iss_tracker:hw05
           
