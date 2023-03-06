@@ -66,7 +66,16 @@ To run the app, you will need to follow these steps:
     
         docker build -t kelach/iss_tracker:hw05 .
   
-  4. Now that the Flask application is running you can navigate to http://localhost:5000/ in your web browser to access the data and you're all set!
+  4. Now, you can run a container of the image with the following command:
+      
+          docker run -it --rm -p 5000:5000 kelach/iss_tracker:hw05
+          
+        - Incase you're new to running Docker images:
+            - `-it` : Allows you to interact in your container using your terminal
+            - `--rm` : removes the container after exiting the Flask application
+            - `-p` : Binds port 5000 on the container to the port 5000 on your local/remote computer (so you can communicate with the flask program!)
+  
+  5. Now that the Flask application is running you can navigate to http://localhost:5000/ in your web browser to access the data and you're all set!
    
 ### Routes
   Here are the currently supported routes and query parameters:
