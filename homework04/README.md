@@ -38,7 +38,7 @@ To run the app, you will need to follow these steps:
   1. Clone this repository to your local machine.
   2. In your command terminal cd into this repository by running: `cd /path/to/coe-322-sp23/homework04`. Where you replace "/path/to/coe-322-sp23/homework04" with the path to this directory. 
   3. Start the Flask server by running: 
-    `flask --app iss_tracker`.   
+    `flask --app iss_tracker run`   
     
       - If you'd like to run this application in debug mode you can run this command to start the flask app instead:
       `flask --app iss_tracker --debug run`
