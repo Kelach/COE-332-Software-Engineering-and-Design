@@ -198,6 +198,7 @@ def get_gene(hgnc_id:str)->dict:
     -----------
         Information (dictionary) associated with a given gene ID (hgnc_id)
     '''
+    global rd
     try:
         # attempt to retrieve genes_data
         genes_data = rd.hget("genes_data")
