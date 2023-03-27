@@ -159,7 +159,7 @@ def handle_data() -> dict:
         # try to evaluate query parameters
         try:
             limit = int(request.args.get("limit", 2**31-1))
-            offset = int(request.args.get("offest", 0))
+            offset = int(request.args.get("offset", 0))
             return get_data(limit, offset)
         except TypeError:
             # catch invalid query parameter inputs
