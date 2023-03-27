@@ -114,13 +114,15 @@ def post_data() -> None:
         response = requests.get(DATA_URL).json()
         genes_data = response.get("response").get("docs")
 
-        
+        # setting each dictionary into redis database
+        for gene in genes_data:
+            key = f"{gene.get('hgnc_id', 'N/A')}:{gene.get('hgnc_id' , 'N/A')}"
+            rd.hset(key, mapping=gene)
 
         # converting all key value pairs to strings
         # genes_data = {key:str(value) for key,value in genes_data.items()}
 
         # updating redis db
-        rd.hset("genes_data", genes_data)
         return True
     except Exception as err:
         print("Excpetion caught: ", err)
