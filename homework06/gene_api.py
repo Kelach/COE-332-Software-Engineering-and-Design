@@ -116,13 +116,20 @@ def post_data() -> None:
 
         # setting each dictionary into redis database
         for gene in genes_data:
+            # re-formatting each gene dictionary
+            for gene_key,gene_val in gene.items():
+                if isinstance(gene_val, list):
+                    # type casting each element to string
+                    gene_val = [str(element) for element in gene_val]
+                    # formatting values pairs from lists to strings seperated by "|"
+                    gene[gene_key] = "|".join(gene_val)
+                elif isinstance(gene_val, int):
+                    # type casting ints to strings
+                    gene[gene_key] = str(gene_val)
+            # updating database
             key = gene.get('hgnc_id')
             rd.hset(key, mapping=gene)
 
-        # converting all key value pairs to strings
-        # genes_data = {key:str(value) for key,value in genes_data.items()}
-
-        # updating redis db
         return True
     except Exception as err:
         print("Excpetion caught: ", err)
