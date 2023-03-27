@@ -196,7 +196,7 @@ def get_genes()->List[str]:
     global rd
     try:
         limit = int(request.args.get("limit", 2**31-1))
-        offset = int(request.args.get("offest", 0))
+        offset = int(request.args.get("offset", 0))
         return rd.keys()[offset:limit+offset]
     except TypeError:
         # catch invalid query parameter inputs
