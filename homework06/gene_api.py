@@ -114,8 +114,10 @@ def post_data() -> None:
         response = requests.get(DATA_URL).json()
         genes_data = response.get("response").get("docs")
 
+        
+
         # converting all key value pairs to strings
-        genes_data = {key:str(value) for key,value in genes_data.items()}
+        # genes_data = {key:str(value) for key,value in genes_data.items()}
 
         # updating redis db
         rd.hset("genes_data", genes_data)
