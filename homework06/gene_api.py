@@ -144,7 +144,10 @@ def handle_data() -> dict:
         genes_data = get_data()
         limit = request.args.get("limit", 2**31-1)
         offset = request.args.get("offest", 0)
-        return genes_data[offset:offset+limit]
+        if genes_data:
+            return genes_data[offset:offset+limit]
+        else:
+            return []
     elif request.method == "POST":
         post_data()
         return message_payload("Gene Data has been posted!")
