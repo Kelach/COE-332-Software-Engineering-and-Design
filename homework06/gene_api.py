@@ -116,7 +116,7 @@ def post_data() -> None:
 
         # setting each dictionary into redis database
         for gene in genes_data:
-            key = f"{gene.get('hgnc_id', 'N/A')}:{gene.get('hgnc_id' , 'N/A')}"
+            key = gene.get('hgnc_id')
             rd.hset(key, mapping=gene)
 
         # converting all key value pairs to strings
