@@ -92,11 +92,11 @@ def delete_data():
     global rd
 
     try:
-        # try to delete data
+        # try to delete data and return True
         rd.flushall()
         return True
     except Exception as err:
-        # otherwise return empty list with error message
+        # otherwise return false
         print("Error encountered: ", err)
         return False
     
@@ -177,7 +177,6 @@ def handle_data() -> dict:
         else:
             return message_payload("An error occurred while trying to delete  data", False, 500)
     else:
-        print("Data route has missed a method")
         return message_payload("Error Processing Response", False, 404)
 
 @app.route("/genes", methods=["GET"])
