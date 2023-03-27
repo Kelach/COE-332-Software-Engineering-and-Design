@@ -10,7 +10,7 @@ DATA_URL = "https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complet
 
 ### HELPER FUNCTIONS ###
 def message_payload(msg:str, success:bool=True, stat_code=200):
-    return {"message": msg, "success":success, stat_code:stat_code}
+    return {"message": msg, "success":success, "status code":stat_code}
     
 def get_redis_client(db:int, host:str):
     '''
@@ -50,7 +50,7 @@ def get_config() -> dict:
     # if we couldn't load the config file, return the default config
     return default_config
 
-def get_data():
+def get_data() -> list:
     '''
     Description
     -----------
@@ -65,8 +65,8 @@ def get_data():
     '''
     global rd
     try:
-        # try to return data
-        return rd.hgetall("genes_data")
+        # retrieve and return all data from redis 
+        return [rd.hgetall(gene_key) for gene_key in rd.keys()]
     except Exception as err:
         # otherwise return empty list with error message
         print("Error retrieving redis db: ", err)
@@ -95,7 +95,7 @@ def delete_data():
         print("Error encountered: ", err)
         return False
     
-def post_data() -> None:
+def post_data() -> bool:
     '''
     Description
     -----------
@@ -160,14 +160,17 @@ def handle_data() -> dict:
         else:
             return []
     elif request.method == "POST":
-        post_data()
-        return message_payload("Gene Data has been posted!")
+        success = post_data()
+        if success:
+            return message_payload("Gene data has been posted")
+        else:
+            return message_payload("Unable to post gene data", False, 500)
     elif request.method == "DELETE":
         status = delete_data()
         if status:
             return message_payload("Gene Data has been deleted!")
         else:
-            return message_payload("An error occurred while trying to delete  data", False, 404)
+            return message_payload("An error occurred while trying to delete  data", False, 500)
     else:
         print("Data route has missed a method")
         return message_payload("Error Processing Response", False, 404)
@@ -177,7 +180,7 @@ def get_genes()->List[str]:
     '''
     Description
     -----------
-        Assembles all hgnc_id's returns it to user
+        Assembles all hgnc_id's and returns it to user
     Args
     -----------
         None
@@ -189,10 +192,7 @@ def get_genes()->List[str]:
     try:
         limit = request.args.get("limit", 2**31-1)
         offset = request.args.get("offest", 0)
-
-        genes_data = rd.hget("genes_data")
-        gene_ids = [data.get("hgnc_id", None) for data in genes_data if data.get("hgnc_id", None) != None]
-
+        gene_ids = rd.keys()
         return gene_ids[offset:limit+offset]
     except:
         print("Error retrieving genes_id data")
@@ -229,7 +229,7 @@ def get_gene(hgnc_id:str)->dict:
         print("unable to reach redis database: ", err)   
 
 ### GLOBAL VARIABLES ###
-rd = get_redis_client(0, "127.0.0.1")
+rd = get_redis_client(0, "redis-db")
 
 if __name__ == "__main__":
     # if debug key not found, default to True
