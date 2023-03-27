@@ -67,14 +67,11 @@ def get_data(limit:int, offset:int) -> list:
     global rd
     try:
         # retrieve only desired keys
-        
+
         gene_keys = rd.keys()[offset:offset+limit]
         # return dictionaries asscoiated with desired gene_keys
         print(gene_keys)
         return [rd.hgetall(gene_key) for gene_key in gene_keys]
-    except IndexError:
-        # handles empty data and out-of-range offset edge cases 
-        return [] 
     except Exception as err:
         # otherwise return empty list with error message
         print("Error retrieving redis db: ", err)
@@ -164,7 +161,7 @@ def handle_data() -> dict:
             limit = int(request.args.get("limit", 2**31-1))
             offset = int(request.args.get("offest", 0))
             return get_data(limit, offset)
-        except:
+        except TypeError:
             # catch invalid query parameter inputs
             return message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504)
     elif request.method == "POST":
@@ -198,12 +195,14 @@ def get_genes()->List[str]:
     '''
     global rd
     try:
-        limit = request.args.get("limit", 2**31-1)
-        offset = request.args.get("offest", 0)
-        gene_ids = rd.keys()
-        return gene_ids[offset:limit+offset]
-    except:
-        print("Error retrieving genes_id data")
+        limit = int(request.args.get("limit", 2**31-1))
+        offset = int(request.args.get("offest", 0))
+        return rd.keys()[offset:limit+offset]
+    except TypeError:
+        # catch invalid query parameter inputs
+        return message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504)
+    except Exception as err:
+        print("Error retrieving genes_id data: ", err)
         return []
 
 
@@ -222,16 +221,7 @@ def get_gene(hgnc_id:str)->dict:
     '''
     global rd
     try:
-        # attempt to retrieve genes_data
-        genes_data = rd.hget("genes_data")
-        # if genes_data exists look for specific gene
-        if genes_data:
-            # loop through all genes_data and search for the gene information
-            # associated with the given gene id
-            gene = [gene_data for gene_data in genes_data if gene_data.get(hgnc_id, None) != None]
-            return gene
-        else:
-            return []
+       return rd.hgetall(hgnc_id)
     except Exception as err:
         # Handles errors trying to reach redis
         print("unable to reach redis database: ", err)   
