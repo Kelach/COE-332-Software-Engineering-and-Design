@@ -67,10 +67,14 @@ def get_data(limit:int, offset:int) -> list:
     global rd
     try:
         # retrieve only desired keys
+        
         gene_keys = rd.keys()[offset:offset+limit]
         # return dictionaries asscoiated with desired gene_keys
+        print(gene_keys)
         return [rd.hgetall(gene_key) for gene_key in gene_keys]
-    
+    except IndexError:
+        # handles empty data and out-of-range offset edge cases 
+        return [] 
     except Exception as err:
         # otherwise return empty list with error message
         print("Error retrieving redis db: ", err)
@@ -155,7 +159,6 @@ def handle_data() -> dict:
     '''
     # Logic to handle GET/POST/DELETE requests
     if request.method == "GET":
-
         # try to evaluate query parameters
         try:
             limit = int(request.args.get("limit", 2**31-1))
@@ -164,8 +167,6 @@ def handle_data() -> dict:
         except:
             # catch invalid query parameter inputs
             return message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504)
-        
-        
     elif request.method == "POST":
         success = post_data()
         if success:
