@@ -153,8 +153,14 @@ def handle_data() -> dict:
     # Logic to handle GET/POST/DELETE requests
     if request.method == "GET":
         genes_data = get_data()
-        limit = request.args.get("limit", 2**31-1)
-        offset = request.args.get("offest", 0)
+
+        # try to evaluate query parameters
+        try:
+            limit = int(request.args.get("limit", 2**31-1))
+            offset = int(request.args.get("offest", 0))
+        except:
+            # catch invalid query parameter inputs
+            return message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504)
         if genes_data:
             return genes_data[offset:offset+limit]
         else:
