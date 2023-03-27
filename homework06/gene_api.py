@@ -50,23 +50,27 @@ def get_config() -> dict:
     # if we couldn't load the config file, return the default config
     return default_config
 
-def get_data() -> list:
+def get_data(limit:int, offset:int) -> list:
+    # genes_data[offset:offset+limit]
     '''
     Description
     -----------
         Returns all gene data from redis database
     Args
     -----------
-        None
+        - limit: max length (int) of returned list 
+        - offset: starting index (int)
     Returns
     -----------
-        Dictionary with all gene data from source website 
-    
+        list of dictionaries with gene_data based on a desired limit and offset.  
     '''
     global rd
     try:
-        # retrieve and return all data from redis 
-        return [rd.hgetall(gene_key) for gene_key in rd.keys()]
+        # retrieve only desired keys
+        gene_keys = rd.keys()[offset:offset+limit]
+        # return dictionaries asscoiated with desired gene_keys
+        return [rd.hgetall(gene_key) for gene_key in gene_keys]
+    
     except Exception as err:
         # otherwise return empty list with error message
         print("Error retrieving redis db: ", err)
@@ -129,7 +133,6 @@ def post_data() -> bool:
             # updating database
             key = gene.get('hgnc_id')
             rd.hset(key, mapping=gene)
-
         return True
     except Exception as err:
         print("Excpetion caught: ", err)
@@ -152,19 +155,17 @@ def handle_data() -> dict:
     '''
     # Logic to handle GET/POST/DELETE requests
     if request.method == "GET":
-        genes_data = get_data()
 
         # try to evaluate query parameters
         try:
             limit = int(request.args.get("limit", 2**31-1))
             offset = int(request.args.get("offest", 0))
+            return get_data(limit, offset)
         except:
             # catch invalid query parameter inputs
             return message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504)
-        if genes_data:
-            return genes_data[offset:offset+limit]
-        else:
-            return []
+        
+        
     elif request.method == "POST":
         success = post_data()
         if success:
