@@ -70,7 +70,6 @@ def get_data(limit:int, offset:int) -> list:
 
         gene_keys = rd.keys()[offset:offset+limit]
         # return dictionaries asscoiated with desired gene_keys
-        print(gene_keys)
         return [rd.hgetall(gene_key) for gene_key in gene_keys]
     except Exception as err:
         # otherwise return empty list with error message
@@ -111,7 +110,6 @@ def post_data() -> bool:
     Returns
     -----------
         None
-    
     '''
     global DATA_URL, rd
     try:
@@ -163,21 +161,21 @@ def handle_data() -> dict:
             return get_data(limit, offset)
         except TypeError:
             # catch invalid query parameter inputs
-            return message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504)
+            return (message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504), 504)
     elif request.method == "POST":
         success = post_data()
         if success:
             return message_payload("Gene data has been posted")
         else:
-            return message_payload("Unable to post gene data", False, 500)
+            return (message_payload("Unable to post gene data", False, 500), 500)
     elif request.method == "DELETE":
         status = delete_data()
         if status:
             return message_payload("Gene Data has been deleted!")
         else:
-            return message_payload("An error occurred while trying to delete  data", False, 500)
+            return (message_payload("An error occurred while trying to delete  data", False, 500), 500)
     else:
-        return message_payload("Error Processing Response", False, 404)
+        return (message_payload("Error Processing Response", False, 404), 404)
 
 @app.route("/genes", methods=["GET"])
 def get_genes()->List[str]:
@@ -199,14 +197,14 @@ def get_genes()->List[str]:
         return rd.keys()[offset:limit+offset]
     except TypeError:
         # catch invalid query parameter inputs
-        return message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504)
+        return (message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504), 504)
     except Exception as err:
         print("Error retrieving genes_id data: ", err)
         return []
 
 
 @app.route("/genes/<hgnc_id>", methods=["GET"])
-def get_gene(hgnc_id:str)->dict:
+def get_gene(hgnc_id:str) -> dict:
     '''
     Description
     -----------
