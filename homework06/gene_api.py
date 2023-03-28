@@ -135,6 +135,9 @@ def post_data() -> bool:
             rd.hset(key, mapping=gene)
         print("uccess")
         return (True,None)
+    except redis.exceptions.DataError:
+        print("invalid inputs to write into database")
+        print("value: ", gene,)
     except Exception as err:
         print("Excpetion caught: ", err)
         return (False, err)
