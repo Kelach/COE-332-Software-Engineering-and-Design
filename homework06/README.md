@@ -2,10 +2,16 @@
 
 ## Project Objective
 
-Easily query and modify information on the whereabouts of the [International Space Station](https://en.wikipedia.org/wiki/International_Space_Station) using the International Space Station Web API! This Flask application supports querying positional, velocity, and locational data about the ISS. The ISS API serves as an intermediary between the [ISS Trajectory Data Webiste](https://spotthestation.nasa.gov/trajectory_data.cfm) and the end user. The ISS trajectory data set contains an abundance of measuring data about the ISS, and it can be challenging to sift through the data manually to find what you are looking for. With this application, you can easily query and parse information regarding the trajectory of the ISS.
+This Flask application uses a persistent Redis database to enable users to query and parse gene information from the HUGO (Human Genome Organization) Genome Nomenclature Committee Dataset. 
+
+- ### Redis Database
+
+  Snapshots of the Redis database are saved locally into a folder named `data` to preserve the memory of the database when the application is not running. When running this application for the first time, the Redis database will be empty. 
+
+- ### Docker Support
+  Docker must be installed to run this application. In addition, The Flask and Redis services can be orchestrated using Docker Compose.
 
 ## Data Set
-
 - ### Description
   The HGNC (HUGO Gene Nomenclature Committee) dataset provides standardized names and symbols for human genes, which helps to reduce ambiguity and confusion in the scientific community. In addition to gene names and symbols, the dataset contains information on gene descriptions, aliases, chromosome locations, protein products, gene families, and orthologs. The HGNC dataset is frequently updated and freely available. 
   
@@ -36,7 +42,7 @@ If you're wondering "what's the difference?" Here's a small description for each
     - Helpful if you'd rather build the Docker image locally instead of pulling it from the Docker Hub. (not reccommended if you'd like to maintain the latest version of this application). You'll also still need Docker installed.
     - Also, building the Docker image for this application yourself gives you the freedom to modify the source code of the [gene_api.py](./gene_api.py) script and even the Docker image itself!
     
-**NOTE**: You'll need a reliable network connection and Python3 installed to proceed with either installation method! (this application was built using Python 3.8).
+**NOTE**: You'll need a reliable network connection and  Python3 + Docker installed to proceed with either installation method! (this application was built using Python 3.8).
 
 
 ## Install/Run via the Docker Hub
@@ -52,25 +58,32 @@ First, ensure you have [Docker installed](https://docs.docker.com/engine/install
 
          docker pull redis:7
   1. In your chosen directory, make a folder titled `data` to ensure the Redis database remains persistent after the application has closed. 
-   1. Next, run the redis container in the background with the following command:
+  1. To enable communication between the `redis` and `gene_api` containers, you must create a network by running the following:
+
+          docker network create flask-app
+
+  1. Next, run the redis container in the background with the following command:
       
-          docker run -d -p 6379:6379 -v /data:/data:rw redis:7 --save 1 1
+          docker run -d --network flask-app --network-alias redis-db -v /data:/data:rw redis:7 --save 1 1
           
         - In case you're new to running Docker images:
             - `-d` : Runs the container in the background  
             - `-p` : Binds port 6379 on the container to the port 6379 on your local/remote computer (so the redis database can be interacted with by the flask application)
             - `-v` : Mounts the "data" volume to the container to keep the database persistnt. Click [here](https://docs.docker.com/storage/volumes/) for more info on volume mounting.
             - `--save` : Saves redis database to local folder `data`
+            - `--network` : User defined network bridge to enable cross-container communications
+            - `--network-alias` : Alias name used to communicate with the redis database
             
    1. Now that the redis database is active you can now start a gene_api container with the following command:
 
-          docker run -it --rm -p 5000:5000 -v /config.yaml:/config.yaml kelach/gene_api:1.0
+          docker run -it --rm -p 5000:5000 --network flask-app -v /config.yaml:/config.yaml kelach/gene_api:1.0
     
         - In case you're new to running Docker images:
             - `-it` : Allows you to interact in your container using your terminal
             - `--rm` : removes the container after exiting the Flask application
             - `-p` : Binds port 5000 on the container to the port 5000 on your local/remote computer (so you can communicate with the flask program)
             - `-v` : Mount binds the `config.yaml` volume to the container to read user configurations.
+            - `--network` : User defined network bridge to enable cross-container communications
         
         - **NOTE:** The gene_api Flask application will automatically start after running this command. Moreover, the application runs in debug mode by default. To change this, set debug flag to `False` in the `config.yaml` file.  
       
@@ -91,17 +104,7 @@ First, ensure you have [Docker installed](https://docs.docker.com/engine/install
           
     - Where you replace "/path/to/homework06/" with the path to this directory.
       
- 1. Building and running the Docker image has been automated with Docker Compose. However, To build and run the application using Docker Compose, you must first change line following line in the [`gene_api.py`](./gene_api.py) script: 
-        
-      `From:`
-      
-        line 235: rd = get_redis_client(0, "127.0.0.1")
-      
-      `To:`
-        
-        line 235: rd = get_redis_client(0, "redis-db")
-
- 1. Now, to build and run the Flask and Redis services run the following command:
+ 1. Building and running the Docker image has been automated with Docker Compose. To build and run the application using Docker Compose run the following command:
 
         docker-compose up -d --build flask-app
 
