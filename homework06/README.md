@@ -58,7 +58,7 @@ First, ensure you have [Docker installed](https://docs.docker.com/engine/install
 
          docker pull redis:7
   1. In your chosen directory, make a folder titled `data` to ensure the Redis database remains persistent after the application has closed. 
-  1. To enable communication between the `redis` and `gene_api` containers, you must create a network by running the following:
+  1. To enable communication between the `redis` and `gene_api` containers, you must create a network by running the following (this only needs to be done once):
 
           docker network create flask-app
 
