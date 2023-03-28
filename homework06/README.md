@@ -54,7 +54,7 @@ First, ensure you have [Docker installed](https://docs.docker.com/engine/install
   1. In your chosen directory, make a folder titled `data` to ensure the Redis database remains persistent after the application has closed. 
    1. Next, run the redis container in the background with the following command:
       
-          docker run -d -p 6379:6379 -v $(pwd)/data:/data:rw redis:7 --save 1 1
+          docker run -d -p 6379:6379 -v /data:/data:rw redis:7 --save 1 1
           
         - In case you're new to running Docker images:
             - `-d` : Runs the container in the background  
@@ -64,7 +64,7 @@ First, ensure you have [Docker installed](https://docs.docker.com/engine/install
             
    1. Now that the redis database is active you can now start a gene_api container with the following command:
 
-          docker run -it --rm -p 5000:5000 -v $(pwd)/config.yaml:/config.yaml kelach/gene_api:1.0
+          docker run -it --rm -p 5000:5000 -v /config.yaml:/config.yaml kelach/gene_api:1.0
     
         - In case you're new to running Docker images:
             - `-it` : Allows you to interact in your container using your terminal
@@ -91,7 +91,17 @@ First, ensure you have [Docker installed](https://docs.docker.com/engine/install
           
     - Where you replace "/path/to/homework06/" with the path to this directory.
       
- 1. Building and running the Docker image has been automated with Docker Compose. To build and run the application type the following in your terminal:
+ 1. Building and running the Docker image has been automated with Docker Compose. However, To build and run the application using Docker Compose, you must first change line following line in the [`gene_api.py`](./gene_api.py) script: 
+        
+      `From:`
+      
+        line 235: rd = get_redis_client(0, "127.0.0.1")
+      
+      `To:`
+        
+        line 235: rd = get_redis_client(0, "redis-db")
+
+ 1. Now, to build and run the Flask and Redis services run the following command:
 
         docker-compose up -d --build flask-app
 

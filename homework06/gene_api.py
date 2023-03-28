@@ -228,7 +228,7 @@ def get_gene(hgnc_id:str) -> dict:
         print("unable to reach redis database: ", err)   
 
 ### GLOBAL VARIABLES ###  
-rd = get_redis_client(0, "redis-db")
+rd = get_redis_client(0, "127.0.0.1")
 
 if __name__ == "__main__":
     # if debug key not found, default to True
