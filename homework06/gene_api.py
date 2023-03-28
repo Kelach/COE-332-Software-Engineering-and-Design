@@ -70,7 +70,6 @@ def get_data(limit:int, offset:int) -> list:
 
         gene_keys = rd.keys()[offset:offset+limit]
         # return dictionaries asscoiated with desired gene_keys
-        print(gene_keys)
         return [rd.hgetall(gene_key) for gene_key in gene_keys]
     except Exception as err:
         # otherwise return empty list with error message
@@ -134,10 +133,11 @@ def post_data() -> bool:
             # updating database
             key = gene.get('hgnc_id')
             rd.hset(key, mapping=gene)
-        return True
+        print("uccess")
+        return (True,None)
     except Exception as err:
         print("Excpetion caught: ", err)
-        return False
+        return (False, err)
 
 
 ### ROUTES ###
@@ -165,14 +165,15 @@ def handle_data() -> dict:
             # catch invalid query parameter inputs
             return message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504)
     elif request.method == "POST":
-        success = post_data()
+        success, err = post_data()
         if success:
             return message_payload("Gene data has been posted")
         else:
+            print(err)
             return message_payload("Unable to post gene data", False, 500)
     elif request.method == "DELETE":
-        status = delete_data()
-        if status:
+        success = delete_data()
+        if success:
             return message_payload("Gene Data has been deleted!")
         else:
             return message_payload("An error occurred while trying to delete  data", False, 500)
@@ -225,8 +226,8 @@ def get_gene(hgnc_id:str)->dict:
         # Handles errors trying to reach redis
         print("unable to reach redis database: ", err)   
 
-### GLOBAL VARIABLES ###
-rd = get_redis_client(0, "127.0.0.1")
+### GLOBAL VARIABLES ###  
+rd = get_redis_client(0, "redis-db")
 
 if __name__ == "__main__":
     # if debug key not found, default to True
