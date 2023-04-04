@@ -4,7 +4,7 @@
 
 This Flask application is the same as shown in [homework06](https://github.com/Kelach/coe-332-sp23/tree/main/homework06), but now this application can deployed using Kubernetes (K8) Clusters. As mentioned previously, this Flask API uses a persistent database with Redis, and enables users to query and parse gene information from the HUGO (Human Genome Organization) Genome Nomenclature Committee Dataset. 
 
-- **NOTE:**This application currently does not support making requests from outside of the K8 cluster. Therefore, once the application is fully deployed, you will have to "enter" into the K8 cluster environment to make queries to the Flask application. 
+- **NOTE:** This application currently does not support making requests from outside of the K8 cluster. Therefore, once the application is fully deployed, you will have to "enter" into the K8 cluster environment to make queries to the Flask application. 
 
 - ### Redis Database 
 
@@ -83,7 +83,7 @@ Before we can deploy our Flask application it's important to note that the filen
 That said, to deploy the Flask application you must:
 
 1. Navigate to your terminal and make a new directory. Then copy all the [K8 config files](#kubernetes-config-files) into it. 
-1. From your terminal, CD into the directory with all the K8 config files, and run the following commands (**NOTE:**kubectl must be installed):
+1. From your terminal, CD into the directory with all the K8 config files, and run the following commands (**NOTE:** kubectl must be installed):
 
 
         kubectl apply -f kelechi-test-flask-deployment.yml
