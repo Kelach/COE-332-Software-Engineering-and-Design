@@ -2,13 +2,13 @@
 
 ## Project Objective
 
-This Flask application is the same as shown in [homework06](https://github.com/Kelach/coe-332-sp23/tree/main/homework06), but now this application can deployed using Kubernetes (K8) Clusters. As mentioned previously, this Flask API uses a persistent database with Redis, and enables users to query and parse gene information from the HUGO (Human Genome Organization) Genome Nomenclature Committee Dataset. 
+This Flask application is identical to the one found in [homework06](https://github.com/Kelach/coe-332-sp23/tree/main/homework06), but now it can be deployed using a Kubernetes (K8) Cluster. As mentioned previously, this Flask API uses a persistent database with Redis, and enables users to query and parse gene information from the HUGO (Human Genome Organization) Genome Nomenclature Committee Dataset. 
 
 - **NOTE:** This application currently does not support making requests from outside of the K8 cluster. Therefore, once the application is fully deployed, you will have to "enter" into the K8 cluster environment to make queries to the Flask application. 
 
 - ### Redis Database 
 
-  Instead of being saved locally, the Redis database is kept persistent using a `persistent volume claim` which is a storage resource provided by K8 that behaves like a global file storage system for all pods that are run within the cluster. (see all the [K8 objects](#kubernetes-config-files) for more information)
+  Instead of being saved locally, the Redis database is kept persistent using a `persistent volume claim` K8 object which acts  as storage resource provided by K8 that behaves like a global file storage system for all pods that are run within the cluster. (see all the [K8 objects](#kubernetes-config-files) for more information)
 
 - ### Docker Support
   You must have Docker installed to run this application ([install Docker here](https://docs.docker.com/get-docker/)). In addition, you must have access to the command line tool `kubectl` (running this application in a K8 cluster without `kubtctl` is very inconvenient).

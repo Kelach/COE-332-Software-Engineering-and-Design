@@ -164,7 +164,7 @@ def handle_data() -> dict:
             limit = int(request.args.get("limit", 2**31-1))
             offset = int(request.args.get("offset", 0))
             return get_data(limit, offset)
-        except TypeError:
+        except ValueError:
             # catch invalid query parameter inputs
             return (message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504), 504)
     elif request.method == "POST":
