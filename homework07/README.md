@@ -1,22 +1,24 @@
-# Human Genome API using Flask + Redis
+# Human Genome Flask API w/ Kubernetes Clusters
 
 ## Project Objective
 
-This Flask application uses a persistent Redis database to enable users to query and parse gene information from the HUGO (Human Genome Organization) Genome Nomenclature Committee Dataset. 
+This Flask application is the same as shown in [homework06](https://github.com/Kelach/coe-332-sp23/tree/main/homework06), but now this application can deployed using Kubernetes (K8) Clusters. As mentioned previously, this Flask API uses a persistent database with Redis, and enables users to query and parse gene information from the HUGO (Human Genome Organization) Genome Nomenclature Committee Dataset. 
 
-- ### Redis Database
+- **NOTE:**This application currently does not support making requests from outside of the K8 cluster. Therefore, once the application is fully deployed, you will have to "enter" into the K8 cluster environment to make queries to the Flask application. 
 
-  Snapshots of the Redis database are saved locally into a folder named `data` to preserve the memory of the database when the application is not running. When running this application for the first time, the Redis database will be empty. 
+- ### Redis Database 
+
+  Instead of being saved locally, the Redis database is kept persistent using a `persistent volume claim` which is a storage resource provided by K8 that behaves like a global file storage system for all pods that are run within the cluster. (see all the [K8 objects](#kubernetes-config-files) for more information)
 
 - ### Docker Support
-  Docker must be installed to run this application. In addition, The Flask and Redis services can be orchestrated using Docker Compose.
+  You must have Docker installed to run this application ([install Docker here](https://docs.docker.com/get-docker/)). In addition, you must have access to the command line tool `kubectl` (running this application in a K8 cluster without `kubtctl` is very inconvenient).
 
 ## Data Set
 - ### Description
   The HGNC (HUGO Gene Nomenclature Committee) dataset provides standardized names and symbols for human genes, which helps to reduce ambiguity and confusion in the scientific community. In addition to gene names and symbols, the dataset contains information on gene descriptions, aliases, chromosome locations, protein products, gene families, and orthologs. The HGNC dataset is frequently updated and freely available. 
   
 - ### Access
-  The gene dataset can be accessed from the [HUGO Gene Nomenclature Committee Dataset Website](https://www.genenames.org/download/archive/). This application makes a requests to the 
+  The gene dataset can be accessed from the [HUGO Gene Nomenclature Committee Dataset Website](https://www.genenames.org/download/archive/). 
 
 
 ## Script/Configs
@@ -28,70 +30,10 @@ This Flask application uses a persistent Redis database to enable users to query
 
   
 ## Installation 
-To get a copy of the project up and running on your local machine, you have three options:
+There is only one way to run this application (using K8 clusters), however you if you'd rather build the Docker image for this application yourself see [Building Docker image](#building-the-docker-image). 
+- **NOTE:** You will need to have a Docker account to proceed with building the image yourself. **In addition,** Building the Docker image yourself is especially helpful if you'd like to change the configuration settings of the Flask application, or modify any of the code in the [k8_gene_api.py](./k8_gene_api.py) script.
 
-- [Install/Run via the Docker Hub](#installrun-via-the-docker-hub)
-
-- [Install/Run via the Dockerfile](#installrun-via-the-dockerfile)
-
-If you're wondering "what's the difference?" Here's a small description for each installation option:
-
-- **via the Docker Hub**: 
-    - Easiest installation method, but you'll need Docker installed on your local machine.([install Docker here](https://docs.docker.com/get-docker/))
-- **via the Dockerfile**: 
-    - Helpful if you'd rather build the Docker image locally instead of pulling it from the Docker Hub. (not reccommended if you'd like to maintain the latest version of this application). You'll also still need Docker installed.
-    - Also, building the Docker image for this application yourself gives you the freedom to modify the source code of the [gene_api.py](./gene_api.py) script and even the Docker image itself!
-    
-**NOTE**: You'll need a reliable network connection and  Python3 + Docker installed to proceed with either installation method! (this application was built using Python 3.8).
-
-
-## Install/Run via the Docker Hub
-First, ensure you have [Docker installed](https://docs.docker.com/engine/install/) on your local machine. To run the app you will need to follow these steps:
-
-  1. Pull the Redis and gene_api Docker images from the Docker Hub Image Registry by running the following commands:
-      
-        `gene_api image`:
-
-         docker pull kelach/gene_api:1.0
-                
-        `Redis image:`
-
-         docker pull redis:7
-  1. In your chosen directory, make a folder titled `data` to ensure the Redis database remains persistent after the application has closed. You will also need to copy the `config.yaml` file in this Github repository if you wish to toggle the debug mode setting of the Flask application.
-  1. To enable communication between the `redis` and `gene_api` containers, you must create a network by running the following (this only needs to be done once):
-
-          docker network create flask-app
-
-  1. Next, run the redis container in the background with the following command:
-      
-          docker run -d --network flask-app --network-alias redis-db -v /data:/data:rw redis:7 --save 1 1
-          
-        - In case you're new to running Docker images:
-            - `-d` : Runs the container in the background  
-            - `-p` : Binds port 6379 on the container to the port 6379 on your local/remote computer (so the redis database can be interacted with by the flask application)
-            - `-v` : Mounts the "data" volume to the container to keep the database persistnt. Click [here](https://docs.docker.com/storage/volumes/) for more info on volume mounting.
-            - `--save` : Saves redis database to local folder `data`
-            - `--network` : User defined network bridge to enable cross-container communications
-            - `--network-alias` : Alias name used to communicate with the redis database
-            
-   1. Now that the redis database is active you can now start a gene_api container with the following command:
-
-          docker run -it --rm -p 5000:5000 --network flask-app -v /config.yaml:/config.yaml kelach/gene_api:1.0
-    
-        - In case you're new to running Docker images:
-            - `-it` : Allows you to interact in your container using your terminal
-            - `--rm` : removes the container after exiting the Flask application
-            - `-p` : Binds port 5000 on the container to the port 5000 on your local/remote computer (so you can communicate with the flask program)
-            - `-v` : Mount binds the `config.yaml` volume to the container to read user configurations.
-            - `--network` : User defined network bridge to enable cross-container communications
-        
-        - **NOTE:** The gene_api Flask application will automatically start after running this command. Moreover, the application runs in debug mode by default. To change this, set debug flag to `False` in the `config.yaml` file.  
-      
-  3. Now that the persistent Redis database and Flask application are up and running you can navigate to http://localhost:5000/data in your web browser to access the data! See [Routes](#routes) for the supported routes.
-
-   - **NOTE:** an empty list will be returned if you are starting this service for the first time.
-
-## Install/Run via the Dockerfile
+## Building The Docker image
   First, ensure you have Docker installed on your local machine. To build the Docker image on your local computer, see the following steps:
   
  1. Clone this repository to your local machine by the following in your command terminal:
@@ -100,21 +42,99 @@ First, ensure you have [Docker installed](https://docs.docker.com/engine/install
   
  1. In your command terminal cd into this repository by running: 
       
-          cd /path/to/homework06
+          cd /path/to/homework07
           
-    - Where you replace "/path/to/homework06/" with the path to this directory.
+    - Where you replace "/path/to/homework07/" with the path to this directory.
       
- 1. Building and running the Docker image has been automated with Docker Compose. To build and run the application using Docker Compose run the following command:
+ 1. If you wish to modify the source code in any productive way, you can do so now. 
+ 1. Next, you will want to run the following command to build the Docker image with a following tag:
 
-        docker-compose up -d --build flask-app
+        docker build -t <username>/k8_gene_api:1.0
 
-    - Incase you're new to using docker-compose:
-        - `-d` : Runs the containers in the background  
-        - `--build` : Builds the `flask-app` image before starting the `flask-app` container
+    - Where `<username>` must be replaced with a username of your choosing. Also, incase you're new to using docker-compose:
+        - `-t` : sets the tag of a given image  
 
- 1. Now that your persistent Redis database and Flask application are up and running navigate to http://localhost:5000/data in your web browser to access the data and you're all set! See [Routes](#routes) for a list of the supported routes. 
+ 1. Finally, you will need to push this image onto the Docker Hub so  it can be accessed in the K8 cluster. To push the build Docker image onto the Docker Hub, run the following command: 
  
- - **NOTE:** an empty list will be returned if you are starting this service for the first time. 
+        docker push <username>/k8_gene_api:1.0
+
+    - **Note:** You must be logged onto a Docker account for this command to work properly. To login to Docker from your command terminal run `docker login`. 
+
+1. Now you can get started deploying the Flask application onto the K8 cluster. However, since you've modified the tag of the Docker image for this Flask application, you will need to change a few of the K8 deployment files. (see below)
+
+## Kubernetes Config Files
+The following is a list of all the Kubernetes object files used to deploy the Flask application with database persistence:
+- [`./kelechi-test-flask-deployment.yml`](./kelechi-test-flask-deployment.yml)
+    - K8 Deployment object. Used to always keep two pods running Docker containers for the Flask application. (if you built the Docker image yourself, then you will need to change `line 25` of this file to the image tag of the Docker image you pushed to the Docker Hub)
+- [`./kelechi-test-flask-service.yml`](./kelechi-test-flask-service.yml)
+    - K8 Service object. Used to facilitate the communication to any number of **regenerated** (that is, deleted manually, and then re-created automatically by the K8 flask deployment object) pods running the Flask applicaiton. 
+- [`./kelechi-test-redis-deployment.yml`](./kelechi-test-redis-deployment.yml)
+    - K8 Deployment object. Used to keep one pod running the Redis database running indefinitely. Data from the Redis database is kept persistence by volume mounting a PVC (persistent volume claim) onto each pod deployed by this K8 object.
+- [`./kelechi-test-redis-pvc.yml`](./kelechi-test-redis-pvc.yml)
+    - K8 Persistent Volume Claim Object. Used to reserve memory resources for the entire cluster. Allows all pods to be volume mounted with additional files. 
+- [`./kelechi-test-redis-service.yml`](./kelechi-test-redis-service.yml)
+    - Used to facilitate the communication between the Flask application and any number of **regenerated** (that is, deleted manually, and then re-created automatically by the K8 Redis Deployment object) pods running the Redis database.
+- [`./py-debug-deployment.yml`](./py-debug-deployment.yml)
+    - Used to debug and interact with the Flask API. 
+
+## Kubernetes Cluster Deployment
+Before we can deploy our Flask application it's important to note that the filenames and text for all K8 configs files must not be changed (unless you are familiar with K8 object file format). If any files or change your K8 deployment may be inhibited. 
+
+That said, to deploy the Flask application you must:
+
+1. Navigate to your terminal and make a new directory. Then copy all the [K8 config files](#kubernetes-config-files) into it. 
+1. From your terminal, CD into the directory with all the K8 config files, and run the following commands (**NOTE:**kubectl must be installed):
+
+
+        kubectl apply -f kelechi-test-flask-deployment.yml
+
+        kubectl apply -f kelechi-test-flask-service.yml
+
+        kubectl apply -f kelechi-test-redis-pvc.yml
+
+        kubectl apply -f kelechi-test-redis-deployment.yml
+
+        kubectl apply -f kelechi-test-redis-service.yml
+
+        kubectl apply -f py-debug-deployment.yml
+
+1. Nice! the flask application is not up and running. To check run the following comamnd in your terminal:
+
+        kubectl get pods
+
+    - You should see an output like this:
+
+          kelechi-test-flask-deployment-64678d6bf9-m9lt9   1/1     Running   0               37h
+          kelechi-test-flask-deployment-64678d6bf9-vqzbp   1/1     Running   0               37h
+          kelechi-test-pvc-deployment-c7d8bb6f8-wxxvx      1/1     Running   0               37h
+          py-debug-deployment-84c7b596c6-2djn6             1/1     Running   0               4d7h
+
+1. In the previous Flask applicationy you made requests to `"localhost:5000"`However, instead of making requests to the "localhost:5000" we must replace "localhost" with the Cluster-IP of the K8 service object connected to the Flask application. To find the Cluster-IP of the Service object, run the following command in your terminal :
+
+        kubectl get services
+    
+    - You should see something similar to this appear in your terminal:
+      
+          NAME                    TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+          flask-service           ClusterIP   10.233.29.47   <none>        5000/TCP   38h
+          kelechi-redis-service   ClusterIP   10.233.3.201   <none>        6379/TCP   4d8h
+
+1. Now copy the Cluster-IP value for the `flask-service`
+      - E.g. `10.233.29.47` would be copied in this case
+1. As you mentioned previously, this repository currently does not support interactions with the Flask API from a public IP address. Instead, you must be "inside" the K8 cluster environment. To get inside, you must run the following command:
+
+        kubectl exec -it <unique-py-debug-deployment-pod> -- /bin/bash
+    - Where you replace `<unique-py-debug-deployment-pod>` with unique name of your py-debug-deployment pod
+      - e.g. From the example output above, the command would be `kubectl exec -it py-debug-deployment-84c7b596c6-2djn6 -- /bin/bash`
+1. Once you have entered into the py-debug-deploymeny pod, you are now officially inside the K8 cluster environment and can now make interact with the Flask API.
+
+    - E.g. run `curl 10.233.29.47:5000/data` to retrieve data from the database. (you should see an empty list) 
+ 
+      
+1. Now that you can access the Flask application from within the K8 cluster, See below for all currently supported routes.
+
+   - **NOTE:** an empty list will be returned if you are starting this service for the first time.
+
  
 
 ## Routes
