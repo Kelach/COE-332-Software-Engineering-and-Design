@@ -143,9 +143,10 @@ def post_data() -> bool:
             print("invalid inputs to write into database")
             print("value: ", gene,)
             return(False, err.message)
+        except ConnectionError:
+            raise(ConnectionError)
         except Exception as err:
-            print("Excpetion caught: ", err.message)
-            return (False, err.message)
+            raise(Exception)
 
     print("success")
     return (True,None)
