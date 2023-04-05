@@ -74,7 +74,7 @@ def get_data(limit:int, offset:int) -> list:
         return [rd.hgetall(gene_key) for gene_key in gene_keys]
     except Exception as err:
         # otherwise return empty list with error message
-        print("Error retrieving redis db: ", err)
+        print("Error retrieving redis db: ", err.message)
         return (message_payload("Error retrieving redis db", False, 500), 500)
 def delete_data():
     '''
@@ -97,7 +97,7 @@ def delete_data():
         return True
     except Exception as err:
         # otherwise return false
-        print("Error encountered: ", err)
+        print("Error encountered: ", err.message)
         return False
     
 def post_data() -> bool:
@@ -114,33 +114,41 @@ def post_data() -> bool:
     '''
     global DATA_URL, rd
     try:
-        # retrieving data from source
+        # try retrieving data from source
         response = requests.get(DATA_URL).json()
         genes_data = response.get("response").get("docs")
-
-        # setting each dictionary into redis database
-        for gene in genes_data:
-            # re-formatting each gene dictionary
-            for gene_key,gene_val in gene.items():
-                if isinstance(gene_val, list):
-                    # type casting each element to string
-                    gene_val = [str(element) for element in gene_val]
-                    # formatting values pairs from lists to strings seperated by "|"
-                    gene[gene_key] = "|".join(gene_val)
-                elif isinstance(gene_val, int):
-                    # type casting ints to strings
-                    gene[gene_key] = str(gene_val)
-            # updating database
-            key = gene.get('hgnc_id')
-            rd.hset(key, mapping=gene)
-        print("success")
-        return (True,None)
-    except redis.exceptions.DataError:
-        print("invalid inputs to write into database")
-        print("value: ", gene,)
     except Exception as err:
-        print("Excpetion caught: ", err)
-        return (False, err)
+        print("unable to retrieve data from source")
+        return (False, err.message)
+
+
+    # setting each dictionary into redis database
+    for gene in genes_data:
+        # re-formatting each gene dictionary
+        for gene_key,gene_val in gene.items():
+            if isinstance(gene_val, list):
+                # type casting each element to string
+                gene_val = [str(element) for element in gene_val]
+                # formatting values pairs from lists to strings seperated by "|"
+                gene[gene_key] = "|".join(gene_val)
+            elif isinstance(gene_val, int):
+                # type casting ints to strings
+                gene[gene_key] = str(gene_val)
+        # updating database
+        key = gene.get('hgnc_id')
+        try:
+            # try to update database
+            rd.hset(key, mapping=gene)
+        except redis.exceptions.DataError:
+            print("invalid inputs to write into database")
+            print("value: ", gene,)
+            return(False, err.message)
+        except Exception as err:
+            print("Excpetion caught: ", err.message)
+            return (False, err.message)
+
+    print("success")
+    return (True,None)
 
 
 ### ROUTES ###
@@ -172,7 +180,6 @@ def handle_data() -> dict:
         if success:
             return message_payload("Gene data has been posted")
         else:
-            print(err)
             return (message_payload("Unable to post gene data", False, 500), 500)
     elif request.method == "DELETE":
         success = delete_data()
@@ -205,7 +212,7 @@ def get_genes()->List[str]:
         # catch invalid query parameter inputs
         return (message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504), 504)
     except Exception as err:
-        print("Error retrieving genes_id data: ", err)
+        print("Error retrieving genes_id data: ", err.message)
         return (message_payload("Error retrieving redis db:", False, 500), 500)
 
 
@@ -227,7 +234,7 @@ def get_gene(hgnc_id:str) -> dict:
        return rd.hgetall(hgnc_id)
     except Exception as err:
         # Handles errors trying to reach redis
-        print("unable to reach redis database: ", err)
+        print("unable to reach redis database: ", err.message)
         return (message_payload("Error retrieving redis db:", False, 500), 500)  
 
 ### GLOBAL VARIABLES ###  
