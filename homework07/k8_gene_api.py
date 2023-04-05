@@ -172,6 +172,7 @@ def handle_data() -> dict:
         if success:
             return message_payload("Gene data has been posted")
         else:
+            print(err)
             return (message_payload("Unable to post gene data", False, 500), 500)
     elif request.method == "DELETE":
         success = delete_data()
