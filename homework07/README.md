@@ -98,7 +98,7 @@ That said, to deploy the Flask application you must:
 
         kubectl apply -f py-debug-deployment.yml
 
-1. Nice! the flask application is not up and running. To check run the following comamnd in your terminal:
+1. Nice! the flask application is now up and running. To check run the following comamnd in your terminal:
 
         kubectl get pods
 
@@ -109,26 +109,16 @@ That said, to deploy the Flask application you must:
           kelechi-test-pvc-deployment-c7d8bb6f8-wxxvx      1/1     Running   0               37h
           py-debug-deployment-84c7b596c6-2djn6             1/1     Running   0               4d7h
 
-1. In the previous Flask applicationy you made requests to `"localhost:5000"`However, instead of making requests to the "localhost:5000" we must replace "localhost" with the Cluster-IP of the K8 service object connected to the Flask application. To find the Cluster-IP of the Service object, run the following command in your terminal :
+1. In the previous Flask application you made requests to `"localhost:5000"`However, instead of making requests to the "localhost:5000" we must replace "localhost" with the hostname of our flask service. The hostname for the flask serivce is `flask-service`.
 
-        kubectl get services
-    
-    - You should see something similar to this appear in your terminal:
-      
-          NAME                    TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
-          flask-service           ClusterIP   10.233.29.47   <none>        5000/TCP   38h
-          kelechi-redis-service   ClusterIP   10.233.3.201   <none>        6379/TCP   4d8h
-
-1. Now copy the Cluster-IP value for the `flask-service`
-      - E.g. `10.233.29.47` would be copied in this case
-1. As you mentioned previously, this repository currently does not support interactions with the Flask API from a public IP address. Instead, you must be "inside" the K8 cluster environment. To get inside, you must run the following command:
+1. Now, you'll need to be "inside" the K8 cluster environment to interact with the flask API. To enter the K8 cluster environment, you must run the following command:
 
         kubectl exec -it <unique-py-debug-deployment-pod> -- /bin/bash
     - Where you replace `<unique-py-debug-deployment-pod>` with unique name of your py-debug-deployment pod
       - e.g. From the example output above, the command would be `kubectl exec -it py-debug-deployment-84c7b596c6-2djn6 -- /bin/bash`
 1. Once you have entered into the py-debug-deploymeny pod, you are now officially inside the K8 cluster environment and can now make interact with the Flask API.
 
-    - E.g. run `curl 10.233.29.47:5000/data` to retrieve data from the database. (you should see an empty list) 
+    - E.g. run `curl flask-service:5000/data` to retrieve data from the Redis database. 
  
       
 1. Now that you can access the Flask application from within the K8 cluster, See below for all currently supported routes.
