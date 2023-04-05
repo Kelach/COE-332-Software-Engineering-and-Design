@@ -75,7 +75,7 @@ def get_data(limit:int, offset:int) -> list:
     except Exception as err:
         # otherwise return empty list with error message
         print("Error retrieving redis db: ", err)
-        return (message_payload("Error retrieving redis db:", False, 500), 500)
+        return (message_payload("Error retrieving redis db", False, 500), 500)
 def delete_data():
     '''
     Description
@@ -206,7 +206,7 @@ def get_genes()->List[str]:
         return (message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504), 504)
     except Exception as err:
         print("Error retrieving genes_id data: ", err)
-        return 
+        return (message_payload("Error retrieving redis db:", False, 500), 500)
 
 
 @app.route("/genes/<hgnc_id>", methods=["GET"])
@@ -227,10 +227,11 @@ def get_gene(hgnc_id:str) -> dict:
        return rd.hgetall(hgnc_id)
     except Exception as err:
         # Handles errors trying to reach redis
-        print("unable to reach redis database: ", err)   
+        print("unable to reach redis database: ", err)
+        return (message_payload("Error retrieving redis db:", False, 500), 500)  
 
 ### GLOBAL VARIABLES ###  
-rd = get_redis_client(0,"kelechi-redis-service", 6379)
+rd = get_redis_client(0,6379,"kelechi-redis-service")
 
 if __name__ == "__main__":
     # if debug key not found, default to True
