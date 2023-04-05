@@ -75,7 +75,7 @@ def get_data(limit:int, offset:int) -> list:
     except Exception as err:
         # otherwise return empty list with error message
         print("Error retrieving redis db: ", err)
-        return []
+        return (message_payload("Error retrieving redis db:", False, 500), 500)
 def delete_data():
     '''
     Description
@@ -205,7 +205,7 @@ def get_genes()->List[str]:
         return (message_payload("Invalid query parameter. 'limit' and 'offset' parameters must be positive integers only", False, 504), 504)
     except Exception as err:
         print("Error retrieving genes_id data: ", err)
-        return []
+        return 
 
 
 @app.route("/genes/<hgnc_id>", methods=["GET"])
