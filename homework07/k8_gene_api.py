@@ -133,7 +133,7 @@ def post_data() -> bool:
             # updating database
             key = gene.get('hgnc_id')
             rd.hset(key, mapping=gene)
-        print("uccess")
+        print("success")
         return (True,None)
     except redis.exceptions.DataError:
         print("invalid inputs to write into database")
@@ -229,7 +229,7 @@ def get_gene(hgnc_id:str) -> dict:
         print("unable to reach redis database: ", err)   
 
 ### GLOBAL VARIABLES ###  
-rd = get_redis_client(0,os.getenv("redis_service_port"), os.getenv("redis_service_host"))
+rd = get_redis_client(0,"kelechi-redis-service", 6379)
 
 if __name__ == "__main__":
     # if debug key not found, default to True
