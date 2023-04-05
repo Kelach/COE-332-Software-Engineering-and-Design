@@ -27,7 +27,7 @@ def get_redis_client(db:int, port:int, host:str):
         redis client for a given redis db
     
     '''
-    return redis.Redis(host=host, port=port, db=db, decode_responses=True)
+    return redis.StrictRedis(host=host, port=port, db=db, decode_responses=True)
 
 def get_config() -> dict:
     '''
