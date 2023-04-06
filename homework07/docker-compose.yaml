@@ -16,7 +16,7 @@ services:
       context: ./
       dockerfile: ./Dockerfile
     depends_on:
-      - redis-db
+      - kelechi-redis-service
     image: kelach/k8_gene_api:1.0
     ports:
       - "5000:5000"
