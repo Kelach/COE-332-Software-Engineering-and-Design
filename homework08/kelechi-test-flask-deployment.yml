@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kelechi-test-flask-deployment
+  labels:
+    app: flask-app
+    env: test
+    username: kelechi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+        env: test
+        username: kelechi
+    spec:
+      containers:
+        - name: flask-app
+          imagePullPolicy: Always
+          image: kelach/atx_traffic:1.0
+          env:
+            - name: REDIS_IP
+              value: $(KELECHI_REDIS_SERVICE_SERVICE_HOST)
+          ports:
+            - name: http
+              containerPort: 5000

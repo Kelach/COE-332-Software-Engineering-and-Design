@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kelechi-test-pvc-deployment
+  labels:
+    app: kelechi-test-redis
+    username: kelechi
+    env: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kelechi-test-redis
+  template:
+    metadata:
+      labels:
+        username: kelechi
+        env: test
+        app: kelechi-test-redis
+    spec:
+      containers:
+        - name: kelechi-test-redis
+          image: redis:7
+          volumeMounts:
+            - name: kelechi-test-pvc
+              mountPath: /data
+          ports:
+            - name: http
+              containerPort: 6379
+      volumes:
+        - name: kelechi-test-pvc
+          persistentVolumeClaim:
+            claimName: kelechi-test-pvc
