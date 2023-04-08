@@ -254,7 +254,7 @@ def get_query_params() -> dict:
             "offset":offset,
             "limit":limit
     }
-def get_month_range(month):
+def get_current_month_range():
     try:
         # The day 28 exists in every month. 4 days later, it's always next 
         curr_year = datetime.datetime.now().year
@@ -349,17 +349,17 @@ def incidents():
                     if datum[ii] == None:
                         datum[ii] = ''
                     rd.hset(key, cols[ii], datum[ii])
-            return 'Data successfully posted\n', 200
+            return message_payload('Data successfully posted')
         except Exception as e:
             print(f'ERROR: unable to post data\n{e}')
-            return f'ERROR: unable to post data\n', 400
+            return (message_payload(f'ERROR: unable to post data)', False, 400), 400)
     elif request.method == 'DELETE':
         try:
             rd.flushdb()
-            return 'Data successfully deleted', 200
+            return (message_payload('Data successfully deleted'), 200)
         except Exception as e:
             print(f'ERROR: unable to delete data\n{e}')
-            return f'ERROR: unable to delete data\n', 400
+            return message_payload(f'ERROR: unable to delete data',False, 400), 400
 
 # routes to help people form queries
 # /ids
@@ -447,7 +447,7 @@ def plot():
         if len(params) == 2: return params
         
         # updating params dictionary with new date ranges
-        month_range = get_month_range()
+        month_range = get_current_month_range()
         params["start"] = month_range[0]
         params["end"] = month_range[1]
         
