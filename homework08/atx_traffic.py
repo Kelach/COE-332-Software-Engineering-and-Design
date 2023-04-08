@@ -332,7 +332,7 @@ def incidents():
         params = get_query_params()
         if len(params) == 2: return params # params is only of length 2 if an error as occured.
         try:
-            return get_incidents()
+            return get_incidents(params)
         except Exception as e:
             print(f'ERROR: unable to get data\n{e}')
             return f'ERROR: unable to get data\n', 400
