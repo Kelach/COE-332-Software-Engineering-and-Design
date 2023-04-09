@@ -1,0 +1,5 @@
+{
+  "message": "An error occured getting plot from redis",
+  "status code": 404,
+  "success": false
+}
