@@ -41,14 +41,14 @@ def message_payload(msg:str, success:bool=True, stat_code=200):
     '''
     return {"message": msg, "success":success, "status code":stat_code}
 
-def get_redis_client(the_url: str, the_port: int, the_db: int) -> redis:
+def get_redis_client(the_url: str, the_port: int, the_db: int, decode_responses:bool = True) -> redis:
     """Returns the Redis database client.
     This function returns a Redis object permitting access to a Redis client
     via 127.0.0.1:6379. The object specifically manipulates database 0. It is
     set to decode responses from the client from bytes to Python strings.
     """
     return redis.Redis(host = the_url, port = the_port, db = the_db, \
-            decode_responses = True)
+            decode_responses = decode_responses)
 
 def get_seconds(time_string) -> float:
     '''
@@ -272,7 +272,7 @@ def get_current_month_range():
 
 app = Flask(__name__)
 rd = get_redis_client(redis_url, redis_port, redis_db)
-rd_plot = get_redis_client(redis_url, redis_port, redis_plot_db)
+rd_plot = get_redis_client(redis_url, redis_port, redis_plot_db, False)
 
 
 
