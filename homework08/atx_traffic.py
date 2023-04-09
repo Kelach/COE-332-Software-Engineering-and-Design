@@ -5,13 +5,14 @@ import time
 from geopy.geocoders import Nominatim
 import geopy.distance
 import matplotlib.pyplot as plt
-import numpy as np
 import datetime
+import os
 ########################
 ### GLOBAL VARIABLES ###
 ########################
 source_url = 'https://data.austintexas.gov/api/views/dx9v-zd7x/rows.json?accessType=DOWNLOAD'
-redis_url = '127.0.0.1'
+redis_url = os.environ.get("REDIS_IP")
+if not redis_url: redis_url = '127.0.0.1'
 redis_port = 6379
 redis_db = 0
 redis_plot_db = 1

@@ -23,8 +23,9 @@ This Flask application is identical to the one found in [homework06](https://git
 
 ## Script/Configs
 - ### *[gene_api.py](./gene_api.py)*
-  - Flask Application that interacts with a Redis database containing HGNC gene information to handle requests from for an end user. The redis database is initially empty when this application is run for the first time. Afterwards a persistent snapshot of the database will be saved locally on your machine.
+  - Flask Application that interacts with a Redis database containing HGNC gene information to handle requests from for an end user. The redis database is initially empty when this application is run for the first time.
   - To view the currently supported routes, see the [Running the App](#running-the-app) section
+  
 - ### *[config.yaml](./config.yaml)*
   - Configuration file to toggle the debug mode of the Flask application.
 

@@ -1,8 +1,8 @@
-# Human Genome Flask API w/ Kubernetes Clusters
+# Austin Incident Tracker | Flask Web API using Kubernetes Clusters
 
-## Project Objective
+## Description
 
-This Flask application is identical to the one found in [homework06](https://github.com/Kelach/coe-332-sp23/tree/main/homework06), but now it can be deployed using a Kubernetes (K8) Cluster. As mentioned previously, this Flask API uses a persistent database with Redis, and enables users to query and parse gene information from the HUGO (Human Genome Organization) Genome Nomenclature Committee Dataset. 
+This Flask Web API project utilizes real-time public traffic incident data from the Austin-Travis County traffic reports RSS feed. The dataset contains an incident's categorization (or type), timestamp, coordinates, street address, publication date, and status. Users can query information about live incidents in the Travis County area as well as view a graph plot of all the current incidents for the month.  The application uses a persistent Redis database for data storage, and can be deployed onto a Kubernetes cluster for scalability and reliability. 
 
 - **NOTE:** This application currently does not support making requests from outside of the K8 cluster. Therefore, once the application is fully deployed, you will have to "enter" into the K8 cluster environment to make queries to the Flask application. 
 
@@ -15,23 +15,24 @@ This Flask application is identical to the one found in [homework06](https://git
 
 ## Data Set
 - ### Description
-  The HGNC (HUGO Gene Nomenclature Committee) dataset provides standardized names and symbols for human genes, which helps to reduce ambiguity and confusion in the scientific community. In addition to gene names and symbols, the dataset contains information on gene descriptions, aliases, chromosome locations, protein products, gene families, and orthologs. The HGNC dataset is frequently updated and freely available. 
-  
+  The Austin Traffic Incidents Report dataset is a real-time data source updated every 5 minutes, containing traffic incident information from the Austin-Travis County traffic reports RSS feed. The dataset includes incident categorization, timestamp, coordinates, street address, and publication date, and differentiates between "active" and "archived" incidents. This dataset provides valuable information for those seeking real-time traffic incident data in Austin.
+
 - ### Access
-  The gene dataset can be accessed from the [HUGO Gene Nomenclature Committee Dataset Website](https://www.genenames.org/download/archive/). 
+  The source used by this application can be accessed from the [Austin Traffic Incidents Website](https://data.austintexas.gov/Transportation-and-Mobility/Real-Time-Traffic-Incident-Reports/dx9v-zd7x). 
 
 
 ## Script/Configs
-- ### *[gene_api.py](./gene_api.py)*
-  - Flask Application that interacts with a Redis database containing HGNC gene information to handle requests from for an end user. The redis database is initially empty when this application is run for the first time. Afterwards a persistent snapshot of the database will be saved locally on your machine.
+- ### *[atx_traffic.py](./atx_traffic.py)*
+  - Flask Application that interacts with a Redis database containing traffic incident information to handle requests from for an end user.
   - To view the currently supported routes, see the [Running the App](#running-the-app) section
+
 - ### *[config.yaml](./config.yaml)*
   - Configuration file to toggle the debug mode of the Flask application.
 
   
 ## Installation 
-There is only one way to run this application (using K8 clusters), however you if you'd rather build the Docker image for this application yourself see [Building Docker image](#building-the-docker-image). 
-- **NOTE:** You will need to have a Docker account to proceed with building the image yourself. **In addition,** Building the Docker image yourself is especially helpful if you'd like to change the configuration settings of the Flask application, or modify any of the code in the [k8_gene_api.py](./k8_gene_api.py) script.
+There is only one way to run this application (deploying it onto a K8 cluster), however you can still (if you want) build the Docker image for this application yourself. To do so, see [Building Docker image](#building-the-docker-image). 
+- **NOTE:** You will need to have a Docker account to proceed with building the image yourself. **In addition,** Building the Docker image yourself is especially helpful if you'd like to change the configuration settings of the Flask application, or modify any of the code in the [atx_traffic.py](./atx_traffic.py) script.
 
 ## Building The Docker image
   First, ensure you have Docker installed on your local machine. To build the Docker image on your local computer, see the following steps:
@@ -49,14 +50,14 @@ There is only one way to run this application (using K8 clusters), however you i
  1. If you wish to modify the source code in any productive way, you can do so now. 
  1. Next, you will want to run the following command to build the Docker image with a following tag:
 
-        docker build -t <username>/k8_gene_api:1.0
+        docker build -t <username>/atx_traffic:1.0
 
     - Where `<username>` must be replaced with a username of your choosing. Also, incase you're new to using docker-compose:
         - `-t` : sets the tag of a given image  
 
  1. Finally, you will need to push this image onto the Docker Hub so  it can be accessed in the K8 cluster. To push the build Docker image onto the Docker Hub, run the following command: 
  
-        docker push <username>/k8_gene_api:1.0
+        docker push <username>/atx_traffic:1.0
 
     - **Note:** You must be logged onto a Docker account for this command to work properly. To login to Docker from your command terminal run `docker login`. 
 
