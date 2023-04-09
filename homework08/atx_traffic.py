@@ -453,8 +453,12 @@ def plot():
         params["start"] = month_range[0]
         params["end"] = month_range[1]
         
-        # retrieve incidents
-        incidents = get_incidents(params)
+        try:
+            # retrieve incidents
+            incidents = get_incidents(params)
+        except Exception as e:
+            print(f'ERROR: unable to get data\n{e}')
+            return f'ERROR: unable to get data\n', 400
         
         # retirieve only created_at timestamps
         incidents_time = [incident["created_at"] for incident in incidents]
@@ -469,9 +473,13 @@ def plot():
 
         # save and upload to Redis
         plt.savefig("plot.png")
-        with open("./plot.png", "rb") as f:
-            file_bytes = f.read()
-            rd_plot.set("plot", file_bytes)
+        try:
+            with open("./plot.png", "rb") as f:
+                file_bytes = f.read()
+                rd_plot.set("plot", file_bytes)
+        except Exception as e:
+            print(f"Unable to save plot to redis db: {e}")
+            return (message_payload("Unable to save plot to redis db", False, 500), 500)
 
         return message_payload("Plot uploaded successfully")
     
