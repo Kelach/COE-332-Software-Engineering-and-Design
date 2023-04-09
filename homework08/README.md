@@ -1,10 +1,11 @@
 # Austin Incident Tracker | Flask Web API using Kubernetes Clusters
 
-## Description
+## Application Overview
 
-This Flask Web API project utilizes real-time public traffic incident data from the Austin-Travis County traffic reports RSS feed. The dataset contains an incident's categorization (or type), timestamp, coordinates, street address, publication date, and status. Users can query information about live incidents in the Travis County area as well as view a graph plot of all the current incidents for the month.  The application uses a persistent Redis database for data storage, and can be deployed onto a Kubernetes cluster for scalability and reliability. 
+- ### Description
+  This Flask Web API project utilizes real-time public traffic incident data from the Austin-Travis County traffic reports RSS feed. The dataset contains an incident's categorization (or type), timestamp, coordinates, street address, publication date, and status. Users can query information about live incidents in the Travis County area as well as view a graph plot of all the current incidents for the month.  The application uses a persistent Redis database for data storage, and can be deployed onto a Kubernetes cluster for scalability and reliability. 
 
-- **NOTE:** This application currently does not support making requests from outside of the K8 cluster. Therefore, once the application is fully deployed, you will have to "enter" into the K8 cluster environment to make queries to the Flask application. 
+  - **NOTE:** This application currently does not support making requests from outside of the K8 cluster. Therefore, once the application is fully deployed, you will have to "enter" into the K8 cluster environment to make queries to the Flask application. 
 
 - ### Redis Database 
 
@@ -31,10 +32,20 @@ This Flask Web API project utilizes real-time public traffic incident data from 
 
   
 ## Installation 
-There is only one way to run this application (deploying it onto a K8 cluster), however you can still (if you want) build the Docker image for this application yourself. To do so, see [Building Docker image](#building-the-docker-image). 
-- **NOTE:** You will need to have a Docker account to proceed with building the image yourself. **In addition,** Building the Docker image yourself is especially helpful if you'd like to change the configuration settings of the Flask application, or modify any of the code in the [atx_traffic.py](./atx_traffic.py) script.
+To get a copy of the project up and running for you, you have two options:
 
-## Building The Docker image
+- [Run via Kubernetes Cluster](#kubernetes-clusters-deployment)
+
+- [Install/Run via Docker-Compose](#installrun-via-docker-compose)
+
+If you're wondering "what's the difference?" Here's a small description for each installation option:
+
+- **via the Docker-Compose**: 
+    - Easiest installation method, but you'll need Docker installed on your local machine.([install Docker here](https://docs.docker.com/get-docker/))
+- **via the Kubernetes**: 
+    - Helpful if you'd like to explore how this flask application can be scaled to handle large requests, with the help of the Kubernetes API. 
+
+## Install/Run Via Docker-Compose
   First, ensure you have Docker installed on your local machine. To build the Docker image on your local computer, see the following steps:
   
  1. Clone this repository to your local machine by the following in your command terminal:
@@ -43,88 +54,118 @@ There is only one way to run this application (deploying it onto a K8 cluster), 
   
  1. In your command terminal cd into this repository by running: 
       
-          cd /path/to/homework07
+          cd /path/to/homework08
           
-    - Where you replace "/path/to/homework07/" with the path to this directory.
+    - Where you replace "/path/to/homework08/" with the path to this directory.
       
- 1. If you wish to modify the source code in any productive way, you can do so now. 
- 1. Next, you will want to run the following command to build the Docker image with a following tag:
+ 1. Building and running the Docker image has been automated with Docker Compose. To build and run the application using Docker Compose run the following command:
 
-        docker build -t <username>/atx_traffic:1.0
+        docker-compose up -d --build flask-app
 
-    - Where `<username>` must be replaced with a username of your choosing. Also, incase you're new to using docker-compose:
-        - `-t` : sets the tag of a given image  
+    - Incase you're new to using docker-compose:
+        - `-d` : Runs the containers in the background  
+        - `--build` : Builds the `flask-app` image before starting the `flask-app` container
 
- 1. Finally, you will need to push this image onto the Docker Hub so  it can be accessed in the K8 cluster. To push the build Docker image onto the Docker Hub, run the following command: 
+ 1. Now that your persistent Redis database and Flask application are up and running navigate to http://localhost:5000/data in your web browser to access the data and you're all set! See [Routes](#routes) for a list of the supported routes. 
  
-        docker push <username>/atx_traffic:1.0
+ - **NOTE:** an empty list will be returned if you are starting this service for the first time.
 
-    - **Note:** You must be logged onto a Docker account for this command to work properly. To login to Docker from your command terminal run `docker login`. 
-
-1. Now you can get started deploying the Flask application onto the K8 cluster. However, since you've modified the tag of the Docker image for this Flask application, you will need to change a few of the K8 deployment files. (see below)
-
-## Kubernetes Config Files
-The following is a list of all the Kubernetes object files used to deploy the Flask application with database persistence:
-- [`./kelechi-test-flask-deployment.yml`](./kelechi-test-flask-deployment.yml)
-    - K8 Deployment object. Used to always keep two pods running Docker containers for the Flask application. (if you built the Docker image yourself, then you will need to change `line 25` of this file to the image tag of the Docker image you pushed to the Docker Hub)
-- [`./kelechi-test-flask-service.yml`](./kelechi-test-flask-service.yml)
-    - K8 Service object. Used to facilitate the communication to any number of **regenerated** (that is, deleted manually, and then re-created automatically by the K8 flask deployment object) pods running the Flask applicaiton. 
-- [`./kelechi-test-redis-deployment.yml`](./kelechi-test-redis-deployment.yml)
-    - K8 Deployment object. Used to keep one pod running the Redis database running indefinitely. Data from the Redis database is kept persistence by volume mounting a PVC (persistent volume claim) onto each pod deployed by this K8 object.
-- [`./kelechi-test-redis-pvc.yml`](./kelechi-test-redis-pvc.yml)
-    - K8 Persistent Volume Claim Object. Used to reserve memory resources for the entire cluster. Allows all pods to be volume mounted with additional files. 
-- [`./kelechi-test-redis-service.yml`](./kelechi-test-redis-service.yml)
-    - Used to facilitate the communication between the Flask application and any number of **regenerated** (that is, deleted manually, and then re-created automatically by the K8 Redis Deployment object) pods running the Redis database.
-- [`./py-debug-deployment.yml`](./py-debug-deployment.yml)
-    - Used to debug and interact with the Flask API. 
 
 ## Kubernetes Cluster Deployment
-Before we can deploy our Flask application it's important to note that the filenames and text for all K8 configs files must not be changed (unless you are familiar with K8 object file format). If any files or change your K8 deployment may be inhibited. 
+  To build and use the Docker Image for this flask application on your own, follow the following instruction below, otherwise your can [skip to deployment](#deployment)
+    
+  - **NOTE:** You will need to have a Docker account to proceed with building the image yourself. **In addition,** Building the Docker image yourself is especially helpful if you'd like to change the configuration settings of the Flask application, or modify any of the code in the [atx_traffic.py](./atx_traffic.py) script.
+  ### Building The Docker image
+    First, ensure you have Docker installed on your local machine. To build the Docker image on your local computer, see the following steps:
+    
+  1. Clone this repository to your local machine by the following in your command terminal:
+        
+            git clone https://github.com/Kelach/coe-332-sp23.git
+    
+  1. In your command terminal cd into this repository by running: 
+        
+            cd /path/to/homework08
+            
+      - Where you replace "/path/to/homework08/" with the path to this directory.
+        
+  1. If you wish to modify the source code in any productive way, you can do so now. 
+  1. Next, you will want to run the following command to build the Docker image with a following tag:
 
-That said, to deploy the Flask application you must:
+          docker build -t <username>/atx_traffic:1.0
 
-1. Navigate to your terminal and make a new directory. Then copy all the [K8 config files](#kubernetes-config-files) into it. 
-1. From your terminal, CD into the directory with all the K8 config files, and run the following commands (**NOTE:** kubectl must be installed):
+      - Where `<username>` must be replaced with a username of your choosing. Also, incase you're new to using docker-compose:
+          - `-t` : sets the tag of a given image  
+
+  1. Finally, you will need to push this image onto the Docker Hub so  it can be accessed in the K8 cluster. To push the build Docker image onto the Docker Hub, run the following command: 
+  
+          docker push <username>/atx_traffic:1.0
+
+      - **Note:** You must be logged onto a Docker account for this command to work properly. To login to Docker from your command terminal run `docker login`. 
+
+  1. Now you can get started deploying the Flask application onto the K8 cluster. However, since you've modified the tag of the Docker image for this Flask application, you will need to change a few of the K8 deployment files. (see below)
+
+  ### Kubernetes Config Files
+  The following is a list of all the Kubernetes object files used to deploy the Flask application with database persistence:
+  - [`./kelechi-test-flask-deployment.yml`](./kelechi-test-flask-deployment.yml)
+      - K8 Deployment object. Used to always keep two pods running Docker containers for the Flask application. (if you built the Docker image yourself, then you will need to change `line 25` of this file to the image tag of the Docker image you pushed to the Docker Hub)
+  - [`./kelechi-test-flask-service.yml`](./kelechi-test-flask-service.yml)
+      - K8 Service object. Used to facilitate the communication to any number of **regenerated** (that is, deleted manually, and then re-created automatically by the K8 flask deployment object) pods running the Flask applicaiton. 
+  - [`./kelechi-test-redis-deployment.yml`](./kelechi-test-redis-deployment.yml)
+      - K8 Deployment object. Used to keep one pod running the Redis database running indefinitely. Data from the Redis database is kept persistence by volume mounting a PVC (persistent volume claim) onto each pod deployed by this K8 object.
+  - [`./kelechi-test-redis-pvc.yml`](./kelechi-test-redis-pvc.yml)
+      - K8 Persistent Volume Claim Object. Used to reserve memory resources for the entire cluster. Allows all pods to be volume mounted with additional files. 
+  - [`./kelechi-test-redis-service.yml`](./kelechi-test-redis-service.yml)
+      - Used to facilitate the communication between the Flask application and any number of **regenerated** (that is, deleted manually, and then re-created automatically by the K8 Redis Deployment object) pods running the Redis database.
+  - [`./py-debug-deployment.yml`](./py-debug-deployment.yml)
+      - Used to debug and interact with the Flask API. 
+
+  ### Deployment
+  Before we can deploy our Flask application it's important to note that the filenames and text for all K8 configs files must not be changed (unless you are familiar with K8 object file format). If any files are changed you may not be able to deploy the flask application (in which case you can just re-pull this repo). 
+
+  That said, to deploy the Flask application you must:
+
+  1. Navigate to your terminal and make a new directory. Then copy all the [K8 config files](#kubernetes-config-files) into it. 
+  1. From your terminal, CD into the directory with all the K8 config files, and run the following commands (**NOTE:** kubectl must be installed):
 
 
-        kubectl apply -f kelechi-test-flask-deployment.yml
+          kubectl apply -f kelechi-test-flask-deployment.yml
 
-        kubectl apply -f kelechi-test-flask-service.yml
+          kubectl apply -f kelechi-test-flask-service.yml
 
-        kubectl apply -f kelechi-test-redis-pvc.yml
+          kubectl apply -f kelechi-test-redis-pvc.yml
 
-        kubectl apply -f kelechi-test-redis-deployment.yml
+          kubectl apply -f kelechi-test-redis-deployment.yml
 
-        kubectl apply -f kelechi-test-redis-service.yml
+          kubectl apply -f kelechi-test-redis-service.yml
 
-        kubectl apply -f py-debug-deployment.yml
+          kubectl apply -f py-debug-deployment.yml
 
-1. Nice! the flask application is now up and running. To check run the following comamnd in your terminal:
+  1. Nice! the flask application is now up and running. To check run the following comamnd in your terminal:
 
-        kubectl get pods
+          kubectl get pods
 
-    - You should see an output like this:
+      - You should see an output like this:
 
-          kelechi-test-flask-deployment-64678d6bf9-m9lt9   1/1     Running   0               37h
-          kelechi-test-flask-deployment-64678d6bf9-vqzbp   1/1     Running   0               37h
-          kelechi-test-pvc-deployment-c7d8bb6f8-wxxvx      1/1     Running   0               37h
-          py-debug-deployment-84c7b596c6-2djn6             1/1     Running   0               4d7h
+            kelechi-test-flask-deployment-64678d6bf9-m9lt9   1/1     Running   0               37h
+            kelechi-test-flask-deployment-64678d6bf9-vqzbp   1/1     Running   0               37h
+            kelechi-test-pvc-deployment-c7d8bb6f8-wxxvx      1/1     Running   0               37h
+            py-debug-deployment-84c7b596c6-2djn6             1/1     Running   0               4d7h
 
-1. In the previous Flask application you made requests to `"localhost:5000"`However, instead of making requests to the "localhost:5000" we must replace "localhost" with the hostname of our flask service. The hostname for the flask serivce is `flask-service`.
+  1. In the previous Flask application you made requests to `"localhost:5000"`However, instead of making requests to the "localhost:5000" we must replace "localhost" with the hostname of our flask service. The hostname for the flask serivce is `flask-service`.
 
-1. Now, you'll need to be "inside" the K8 cluster environment to interact with the flask API. To enter the K8 cluster environment, you must run the following command:
+  1. Now, you'll need to be "inside" the K8 cluster environment to interact with the flask API. To enter the K8 cluster environment, you must run the following command:
 
-        kubectl exec -it <unique-py-debug-deployment-pod> -- /bin/bash
-    - Where you replace `<unique-py-debug-deployment-pod>` with unique name of your py-debug-deployment pod
-      - e.g. From the example output above, the command would be `kubectl exec -it py-debug-deployment-84c7b596c6-2djn6 -- /bin/bash`
-1. Once you have entered into the py-debug-deploymeny pod, you are now officially inside the K8 cluster environment and can now make interact with the Flask API.
+          kubectl exec -it <unique-py-debug-deployment-pod> -- /bin/bash
+      - Where you replace `<unique-py-debug-deployment-pod>` with unique name of your py-debug-deployment pod
+        - e.g. From the example output above, the command would be `kubectl exec -it py-debug-deployment-84c7b596c6-2djn6 -- /bin/bash`
+  1. Once you have entered into the py-debug-deploymeny pod, you are now officially inside the K8 cluster environment and can now interact with the Flask API.
 
-    - E.g. run `curl flask-service:5000/data` to retrieve data from the Redis database. 
- 
-      
-1. Now that you can access the Flask application from within the K8 cluster, See below for all currently supported routes.
+      - E.g. run `curl flask-service:5000/incidents` to retrieve data from the Redis database. 
+  
+        
+  1. Now that you can access the Flask application from within the K8 cluster, See below for all currently supported routes.
 
-   - **NOTE:** an empty list will be returned if you are starting this service for the first time.
+    - **NOTE:** an empty list will be returned if you are starting this service for the first time.
 
  
 
@@ -132,19 +173,20 @@ That said, to deploy the Flask application you must:
   Here are the currently supported routes and query parameters:
   | Route | Method | Returned Data
   |-------|---------|---------|
-  | `/data` | `POST` |Posts entire HGNC dataset onto the redis database (list of dictionaries). |
-  | `/data` | `GET` | Retrieves all or some human genome data  <br><em> - Includes optional parameters "limit" (positive int) to truncate results and "offset" (positive int) to change the starting position at which the data is returned </em></br> See [examples](#example-queries-and-results) below |
-  | `/data` | `DELETE` | Deletes all human genome data from the redis database |
-  | `/genes` | `GET` | Returns a list of all human genome unique ids <br><em> - Includes optional parameters "limit" (positive int) to truncate results and "offset" (positive int) to change the starting position at which the data is returned </em></br> See [examples](#example-queries-and-results) below |
-  | `/genes/<hgnc_id>` | `GET` | Returns the information (dictionary) associated with a given human genome id|
+  | `/incidents` | `POST` |Posts entire HGNC dataset onto the redis database (list of dictionaries). |
+  | `/incidents` | `GET` | Retrieves all or some traffic incidents data  <br><em> - Includes optional parameters "limit" (positive int) to truncate results and "offset" (positive int) to change the starting position at which the data is returned </em></br> See [examples](#example-queries-and-results) below |
+  | `/incidents` | `DELETE` | Deletes all traffic incidents  data from the redis database |
+  | `/image` | `POST` | Upload a histogram plot of all the traffic incidents that have occured within the current month |
+  | `/image` | `DELETE` | Removes the histogram plot from the redis database |
+  | `/image` | `GET` | Returns the binary code representing the .png histogram image |
   
   
   
 ## Example Queries and Results
   - **Notes**: 
     - You may need to add quotes ("") surrounding your queries if you are using a terminal 
-        - e.g. `"http://localhost:5000/genes/HGNC:5"`
-        instead of: `http://localhost:5000/genes/HGNC:5`
+        - e.g. `"http://localhost:5000/incidents/"`
+        instead of: `http://localhost:5000/incidents/`
     - Some example reponses have been truncated to conserve spacing.
 
 <table>
@@ -163,47 +205,51 @@ That said, to deploy the Flask application you must:
 <tr>
 <td> 
 
-`"http://localhost:5000/data?limit=1"` 
-
-</td>
-<td>
-    
-```json
-{
- "hgnc_id": "HGNC:5",
- "symbol": "A1BG",
- "name": "alpha-1-B glycoprotein",
- "locus_group": "protein-coding gene",
- "locus_type": "gene with protein product",
- "status": "Approved",
- "location": "19q13.43",
- "location_sortable": "19q13.43",
- "alias_symbol": "",
- "alias_name": "",
- "prev_symbol": "",
- "prev_name": "",
- "...": "...",
-}
-```
-</td>
-</tr>
-
-<tr>
-<td>
-
-`"http://localhost:5000/genes?limit=5"` 
+`"http://localhost:5000/incidents?limit=1"` 
 
 </td>
 <td>
     
 ```json
 [
-  "HGNC:32881",
-  "HGNC:26444",
-  "HGNC:42265",
-  "HGNC:36070",
-  "HGNC:31324"
+  {
+    "address": "6700 METROPOLIS DR",
+    "created_at": "1569627569",
+    "created_meta": "",
+    "id": "00000000-0000-0000-E98E-C0E30E627044",
+    "issue_reported": "Crash Urgent",
+    "latitude": "30.203577",
+    "location": "(30.203577,-97.707809)",
+    "longitude": "-97.707809",
+    "meta": "{ }",
+    "position": "0",
+    "published_date": "1542035441",
+    "sid": "row-34ey_saf4.uiwa",
+    "traffic_report_id": "B5F55A9D15C6752E5D9DFD7336FFB008B403DC19_1542035441",
+    "traffic_report_status": "ARCHIVED",
+    "traffic_report_status_date_time": "1542040803",
+    "updated_at": "1587152573",
+    "updated_meta": ""
+  }
 ]
+```
+</td>
+</tr>
+
+<tr>
+<td>
+
+`POST "http://localhost:5000/incidents` 
+
+</td>
+<td>
+    
+```json
+{
+  "message": "Data has been posted successfully!",
+  "success": true,
+  "status code": 200
+}
 ```
 
 </td>
@@ -212,30 +258,16 @@ That said, to deploy the Flask application you must:
 <tr>
 <td>
 
-`"http://localhost:5000/data/HGNC:31324"` 
+`POST "http://localhost:5000/image"` 
 
 </td>
 <td>
     
 ```json
 {
-  "_version_": "1761544714736107520",
-  "agr": "HGNC:31324",
-  "date_approved_reserved": "2009-03-01",
-  "date_modified": "2022-11-09",
-  "ensembl_gene_id": "ENSG00000213896",
-  "entrez_id": "253013",
-  "hgnc_id": "HGNC:31324",
-  "location": "5q12.1",
-  "location_sortable": "05q12.1",
-  "locus_group": "pseudogene",
-  "locus_type": "pseudogene",
-  "name": "ribosomal protein L31 pseudogene 8",
-  "pubmed_id": "19123937",
-  "refseq_accession": "NG_005654",
-  "status": "Approved",
-  "symbol": "RPL31P8",
-  "uuid": "14d51cd0-16c6-47ff-b53a-014af67f4ce2"
+  "message": "Image has been posted successfully!",
+  "success": true,
+  "status code": 200
 }
 ```
 
