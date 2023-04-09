@@ -178,7 +178,7 @@ If you're wondering "what's the difference?" Here's a small description for each
   | `/incidents` | `DELETE` | Deletes all traffic incidents  data from the redis database |
   | `/image` | `POST` | Upload a histogram plot of all the traffic incidents that have occured within the current month |
   | `/image` | `DELETE` | Removes the histogram plot from the redis database |
-  | `/image` | `GET` | Returns the binary code representing the .png histogram image |
+  | `/image` | `GET` | Returns the binary code representing the .png histogram image <br><b>NOTE:</b> since the image will be returned in binary code, you will need to redirect your request in your terminal to a file name with a ".png" extension. An example graph plot can be found [here](./plot.png) </br> |
   
   
   
