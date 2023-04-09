@@ -462,7 +462,7 @@ def plot():
         
         # retirieve only created_at timestamps
         incidents_time = [incident["created_at"] for incident in incidents]
-        
+        print(len(incidents_time))
         # plotting
         plt.hist(incidents_time, int(month_range[1][-2:]))
         
