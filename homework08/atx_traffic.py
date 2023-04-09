@@ -432,6 +432,7 @@ def plot():
                 plot_bytes = rd_plot.get("plot")
                 f.write(plot_bytes)
             except TypeError as e: # Handles retrieve from empty database case
+                print("Unable to write redis image into memory: {e}")
                 return message_payload("ERROR: No plot currently exists in the database", False, 404), 404
             except Exception as e:
                 print("Unable to write redis image into memory: {e}")
@@ -470,7 +471,7 @@ def plot():
         plt.savefig("plot.png")
         with open("./plot.png", "rb") as f:
             file_bytes = f.read()
-            rd.set("plot", file_bytes)
+            rd_plot.set("plot", file_bytes)
 
         return message_payload("Plot uploaded successfully")
     
