@@ -1,4 +1,4 @@
-# Austin Incident Tracker | Flask Web API using Kubernetes Clusters
+# Austin Incident Tracker | Flask Web API w/ Kubernetes Deployment
 
 ## Application Overview
 
@@ -76,7 +76,7 @@ First, ensure you have Docker installed on your local machine. To build the Dock
     
   - **NOTE:** You will need to have a Docker account to proceed with building the image yourself. **In addition,** Building the Docker image yourself is especially helpful if you'd like to change the configuration settings of the Flask application, or modify any of the code in the [atx_traffic.py](./atx_traffic.py) script.
   ### Building The Docker image
-    First, ensure you have Docker installed on your local machine. To build the Docker image on your local computer, see the following steps:
+   First, ensure you have Docker installed on your local machine. To build the Docker image on your local computer, see the following steps:
     
   1. Clone this repository to your local machine by the following in your command terminal:
         
