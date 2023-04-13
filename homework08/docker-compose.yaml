@@ -23,4 +23,4 @@ services:
     volumes:
       - ./config.yaml:/config.yaml
     environment:
-      - REDIS_IP="redis-db"
+      - REDIS_IP=redis-db
