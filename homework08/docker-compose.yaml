@@ -16,11 +16,11 @@ services:
       context: ./
       dockerfile: ./Dockerfile
     depends_on:
-      - kelechi-redis-service
+      - redis-db
     image: kelach/atx_traffic:1.0
     ports:
       - "5000:5000"
     volumes:
       - ./config.yaml:/config.yaml
     environment:
-      - REDIS_IP="redis_ip_here"	
+      - REDIS_IP="redis-db"
