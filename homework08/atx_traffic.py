@@ -353,7 +353,7 @@ def incidents():
             return message_payload('Data successfully posted')
         except Exception as e:
             print(f'ERROR: unable to post data\n{e}')
-            return (message_payload(f'ERROR: unable to post data)', False, 400), 400)
+            return (message_payload(f'ERROR: unable to post data {e}', False, 400), 400)
     elif request.method == 'DELETE':
         try:
             rd.flushdb()
