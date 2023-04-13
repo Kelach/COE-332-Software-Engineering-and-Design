@@ -46,7 +46,7 @@ If you're wondering "what's the difference?" Here's a small description for each
     - Helpful if you'd like to explore how this flask application can be scaled to handle large requests, with the help of the Kubernetes API. 
 
 ## Install/Run Via Docker-Compose
-  First, ensure you have Docker installed on your local machine. To build the Docker image on your local computer, see the following steps:
+First, ensure you have Docker installed on your local machine. To build the Docker image on your local computer, see the following steps:
   
  1. Clone this repository to your local machine by the following in your command terminal:
       
