@@ -173,7 +173,7 @@ First, ensure you have Docker installed on your local machine. To build the Dock
   Here are the currently supported routes and query parameters:
   | Route | Method | Returned Data
   |-------|---------|---------|
-  | `/incidents` | `POST` |Posts entire HGNC dataset onto the redis database (list of dictionaries). |
+  | `/incidents` | `POST` |Posts entire dataset onto the redis database (list of dictionaries). |
   | `/incidents` | `GET` | Retrieves all or some traffic incidents data  <br><em> - Includes optional parameters "limit" (positive int) to truncate results and "offset" (positive int) to change the starting position at which the data is returned </em></br> See [examples](#example-queries-and-results) below |
   | `/incidents` | `DELETE` | Deletes all traffic incidents  data from the redis database |
   | `/image` | `POST` | Upload a histogram plot of all the traffic incidents that have occured within the current month |
