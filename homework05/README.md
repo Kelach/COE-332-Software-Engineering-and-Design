@@ -2,7 +2,7 @@
 
 ## Project Objective
 
-This new and improved Flask application now allows the user to query **and modify** [International Space Station](https://en.wikipedia.org/wiki/International_Space_Station) (ISS) positional and velocity data. As previously, the data set contains an abundance of interesting positional and velocity data for the ISS, and it can be challenging to sift through the data manually to find what you are looking for. With this application, you can easily query the ISS data set and receive interesting information.
+This new and improved Flask application now allows the user to query **and modify** [International Space Station](https://en.wikipedia.org/wiki/International_Space_Station) (ISS) positional and velocity data. As previously mentioned, the data set contains an abundance of interesting positional and velocity data for the ISS, and it can be challenging to sift through the data manually to find what you are looking for. With this application, you can easily query the ISS data set and receive interesting information.
 
 ## Data Set
 
