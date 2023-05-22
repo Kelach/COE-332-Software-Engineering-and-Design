@@ -9,7 +9,7 @@
 | **2. Parsing Common Data Formats**    | JSON, YAML, XML, CSV | [Meteorite Landings Simulation](./homework02/) |
 | **3. Software Engineering Practices** in Python | DocStrings, Error Handling + Logging, Test-Driven Delopment | [Mars Turbidity Simluation ](./homework03) |
 | **4. APIs and Flask**    | APIs, Web APIs, Flask, HTTP |  [Web API For ISS Data](./homework04)   |
-| **5. Containerization and Automation**|  Docker, Docker Compose | - [Containerized ISS REST API](https://github.com/Kelach/International-Space-Station-API) |
+| **5. Containerization and Automation**|  Docker, Docker Compose | [Containerized ISS REST API](https://github.com/Kelach/International-Space-Station-API) |
 | **6. Databases and Persistence + Containerizing Redis** | Redis, Data-Persistence |  [Human Genome REST API](./homework06)         |
 | **7. Container Orchestration**            | Kubernetes, Kubeclt command-line tool   |  [Deployed Human Genome REST API](./homework07)         |
 | **8. Asynchronous Programming**           | Concurrency & Messaging Systems, Analysis Engines | [Austin Traffic Incidents REST API](https://github.com/Kelach/ATX-Traffic-Incidents-API) |
